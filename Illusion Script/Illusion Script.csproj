@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>IllusionScript</RootNamespace>
+        <AssemblyName>ils</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\std\std.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
+        <ProjectReference Include="..\os\os.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Illusion Script SDK\Illusion Script SDK.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="ils.ini">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="main.ils">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="module.ils">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <Target Name="Libs" AfterTargets="AfterBuild">
+        <Message Text="Build Libaries ..." />
+        <Copy SourceFiles="../std/bin/Debug/net5.0/std.dll" DestinationFolder="$(OutDir)/ext/" />
+        <Copy SourceFiles="../os/bin/Debug/net5.0/os.dll" DestinationFolder="$(OutDir)/ext/" />
+    </Target>
+    <Target Name="Remove" AfterTargets="AfterBuild">
+        <Message Text="Deleting unimportant files" />
+<!--                <Delete Files="$(OutDir)Illusion Script SDK.pdb"/>-->
+<!--                <Delete Files="$(OutDir)Illusion Script.pdb"/>-->
+<!--                <Delete Files="$(OutDir)Illusion Script.runtimeconfig.dev.json"/>-->
+<!--                <Delete Files="$(OutDir)Illusion Script.deps.json"/>-->
+    </Target>
+</Project>
