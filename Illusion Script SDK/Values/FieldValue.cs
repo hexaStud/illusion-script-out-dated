@@ -1,16 +1,21 @@
-﻿using IllusionScript.SDK.Values.Assets;
+﻿using IllusionScript.SDK.Nodes;
+using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.SDK.Values
 {
     public class FieldValue : ClassItemValue
     {
-        public FieldValue(string name, Value value) : base(name, value)
+        public readonly Value Value;
+
+        public FieldValue(Token contextIsolation, string name, Value value) : base(contextIsolation, name, default)
         {
+            Value = value;
+            Self = this;
         }
 
         public override Value Copy()
         {
-            FieldValue value = new FieldValue(Name, Value);
+            FieldValue value = new FieldValue(ContextIsolation, Name, Value);
             value.SetContext(Context);
             value.SetPosition(StartPos, EndPos);
             return value;
@@ -18,7 +23,7 @@ namespace IllusionScript.SDK.Values
 
         public override string __repr__(int stage)
         {
-            return $"[{Name}:{Value.__repr__(stage)}]";
+            return $"[{ContextIsolation.Value.GetAsString()}][{Name}:{Value.__repr__(stage)}]";
         }
     }
 }

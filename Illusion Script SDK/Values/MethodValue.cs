@@ -6,17 +6,17 @@ namespace IllusionScript.SDK.Values
 {
     public class MethodValue : ClassItemValue
     {
-        public Node BodyNode;
-        public List<string> ArgNames;
-        public bool ShouldReturnAuto;
+        public readonly Node BodyNode;
+        public readonly List<string> ArgNames;
+        public readonly bool ShouldReturnAuto;
 
-        public MethodValue(string name, Node bodyNode, List<string> argNames, bool shouldReturnAuto) : base(name,
-            default)
+        public MethodValue(Token contextIsolation, string name, Node bodyNode, List<string> argNames,
+            bool shouldReturnAuto) : base(contextIsolation, name, default)
         {
             BodyNode = bodyNode;
             ArgNames = argNames;
             ShouldReturnAuto = shouldReturnAuto;
-            Value = this;
+            Self = this;
         }
 
         public override RuntimeResult Execute(List<Value> args, Value self = default)
@@ -50,7 +50,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            MethodValue copy = new MethodValue(Name, BodyNode, ArgNames, ShouldReturnAuto);
+            MethodValue copy = new MethodValue(ContextIsolation, Name, BodyNode, ArgNames, ShouldReturnAuto);
             copy.SetContext(Context);
             copy.SetPosition(StartPos, EndPos);
             return copy;
@@ -58,7 +58,7 @@ namespace IllusionScript.SDK.Values
 
         public override string __repr__(int stage)
         {
-            return $"<method {Name}[{StartPos.FileName} ({StartPos.Ln + 1})]>";
+            return $"<method [{ContextIsolation.Value.GetAsString()}] {Name}[{StartPos.FileName} ({StartPos.Ln + 1})]>";
         }
     }
 }

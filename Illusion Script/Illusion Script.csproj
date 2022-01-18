@@ -38,9 +38,9 @@
     </Target>
     <Target Name="Remove" AfterTargets="AfterBuild">
         <Message Text="Deleting unimportant files" />
-<!--                <Delete Files="$(OutDir)Illusion Script SDK.pdb"/>-->
-<!--                <Delete Files="$(OutDir)Illusion Script.pdb"/>-->
-<!--                <Delete Files="$(OutDir)Illusion Script.runtimeconfig.dev.json"/>-->
-<!--                <Delete Files="$(OutDir)Illusion Script.deps.json"/>-->
+<!--                <Delete Files="$(OutDir)ils.sdk.pdb"/>-->
+<!--                <Delete Files="$(OutDir)ils.pdb"/>-->
+<!--                <Delete Files="$(OutDir)ils.runtimeconfig.dev.json"/>-->
+<!--                <Delete Files="$(OutDir)ils.deps.json"/>-->
     </Target>
 </Project>

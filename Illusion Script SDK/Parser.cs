@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Resources;
+using System.Transactions;
 using IllusionScript.SDK.Nodes;
 using IllusionScript.SDK.Nodes.Assets;
 using IllusionScript.SDK.Errors;
@@ -109,7 +110,7 @@ namespace IllusionScript.SDK
                     continue;
                 }
 
-                
+
                 statements.Add(statement);
             }
 
@@ -262,12 +263,12 @@ namespace IllusionScript.SDK
 
         private ParserResult ArithExpr()
         {
-            return BinOp(Term, new[] {Constants.TT.PLUS, Constants.TT.MINUS});
+            return BinOp(Term, new[] { Constants.TT.PLUS, Constants.TT.MINUS });
         }
 
         private ParserResult Term()
         {
-            return BinOp(Factor, new[] {Constants.TT.MUL, Constants.TT.DIV, Constants.TT.MODULO});
+            return BinOp(Factor, new[] { Constants.TT.MUL, Constants.TT.DIV, Constants.TT.MODULO });
         }
 
         private ParserResult Factor()
@@ -293,7 +294,7 @@ namespace IllusionScript.SDK
 
         private ParserResult Power()
         {
-            return BinOp(Call, new[] {Constants.TT.POW}, Factor);
+            return BinOp(Call, new[] { Constants.TT.POW }, Factor);
         }
 
         private ParserResult Call()
@@ -778,7 +779,7 @@ namespace IllusionScript.SDK
         {
             ParserResult res = new ParserResult();
             IfExprBorCNode ifCase =
-                (IfExprBorCNode) res.Register(IfExprCase(head ? Constants.HeadKeyword.IF : Constants.Keyword.IF, head));
+                (IfExprBorCNode)res.Register(IfExprCase(head ? Constants.HeadKeyword.IF : Constants.Keyword.IF, head));
             if (res.Error != default(Error))
             {
                 return res;
@@ -796,7 +797,7 @@ namespace IllusionScript.SDK
             Node elseCase = default;
 
             if (!CurrentToken.Matches(head ? Constants.TT.HEAD_KEYWORD : Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), keyword)))
+                    new TokenValue(typeof(string), keyword)))
             {
                 return res.Failure(new InvalidSyntaxError(
                     $"Expected '{keyword}'",
@@ -842,14 +843,14 @@ namespace IllusionScript.SDK
                 });
 
                 if (CurrentToken.Matches(head ? Constants.TT.HEAD_KEYWORD : Constants.TT.KEYWORD,
-                    new TokenValue(typeof(string), head ? Constants.HeadKeyword.END : Constants.Keyword.END)))
+                        new TokenValue(typeof(string), head ? Constants.HeadKeyword.END : Constants.Keyword.END)))
                 {
                     res.RegisterAdvancement();
                     Advance();
                 }
                 else
                 {
-                    IfExprBorCNode allCases = (IfExprBorCNode) res.Register(IfExprBorC(head));
+                    IfExprBorCNode allCases = (IfExprBorCNode)res.Register(IfExprBorC(head));
                     if (res.Error != default(Error))
                     {
                         return res;
@@ -876,7 +877,7 @@ namespace IllusionScript.SDK
                     Statements = expr,
                     Bool = false
                 });
-                IfExprBorCNode allCases = (IfExprBorCNode) res.Register(IfExprBorC(head));
+                IfExprBorCNode allCases = (IfExprBorCNode)res.Register(IfExprBorC(head));
                 elseCase = allCases.ElseCase;
                 foreach (IfCase casesCase in allCases.Cases)
                 {
@@ -894,9 +895,9 @@ namespace IllusionScript.SDK
             Node elseCase;
 
             if (CurrentToken.Matches(head ? Constants.TT.HEAD_KEYWORD : Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), head ? Constants.HeadKeyword.ELSE_IF : Constants.Keyword.ELSE_IF)))
+                    new TokenValue(typeof(string), head ? Constants.HeadKeyword.ELSE_IF : Constants.Keyword.ELSE_IF)))
             {
-                IfExprBorCNode allCases = (IfExprBorCNode) res.Register(IfExprB(head));
+                IfExprBorCNode allCases = (IfExprBorCNode)res.Register(IfExprB(head));
                 if (res.Error != default(Error))
                 {
                     return res;
@@ -928,7 +929,7 @@ namespace IllusionScript.SDK
             ElseCaseNode elseCase = default;
 
             if (CurrentToken.Matches(head ? Constants.TT.HEAD_KEYWORD : Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), head ? Constants.HeadKeyword.ELSE : Constants.Keyword.ELSE)))
+                    new TokenValue(typeof(string), head ? Constants.HeadKeyword.ELSE : Constants.Keyword.ELSE)))
             {
                 res.RegisterAdvancement();
                 Advance();
@@ -946,7 +947,7 @@ namespace IllusionScript.SDK
 
                     elseCase = new ElseCaseNode(statements, true);
                     if (CurrentToken.Matches(head ? Constants.TT.HEAD_KEYWORD : Constants.TT.KEYWORD,
-                        new TokenValue(typeof(string), head ? Constants.HeadKeyword.END : Constants.Keyword.END)))
+                            new TokenValue(typeof(string), head ? Constants.HeadKeyword.END : Constants.Keyword.END)))
                     {
                         res.RegisterAdvancement();
                         Advance();
@@ -977,7 +978,7 @@ namespace IllusionScript.SDK
         {
             ParserResult res = new ParserResult();
             if (!CurrentToken.Matches(Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), Constants.Keyword.WHILE)))
+                    new TokenValue(typeof(string), Constants.Keyword.WHILE)))
             {
                 return res.Failure(new InvalidSyntaxError(
                     "Expected 'while'", CurrentToken.StartPos, CurrentToken.EndPos));
@@ -1140,7 +1141,7 @@ namespace IllusionScript.SDK
         {
             ParserResult res = new ParserResult();
             if (!CurrentToken.Matches(Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), Constants.Keyword.FUNCTION)))
+                    new TokenValue(typeof(string), Constants.Keyword.FUNCTION)))
             {
                 return res.Failure(new InvalidSyntaxError(
                     "Expected 'define'", CurrentToken.StartPos, CurrentToken.EndPos));
@@ -1258,7 +1259,7 @@ namespace IllusionScript.SDK
         {
             ParserResult res = new ParserResult();
             if (!CurrentToken.Matches(Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), Constants.Keyword.CLASS)))
+                    new TokenValue(typeof(string), Constants.Keyword.CLASS)))
             {
                 return res.Failure(new InvalidSyntaxError(
                     "Expected 'class'", CurrentToken.StartPos, CurrentToken.EndPos));
@@ -1276,6 +1277,23 @@ namespace IllusionScript.SDK
             res.RegisterAdvancement();
             Advance();
 
+            Token extends = default;
+            if (CurrentToken.Matches(Constants.TT.KEYWORD,
+                    new TokenValue(typeof(string), Constants.Keyword.EXTENDS)))
+            {
+                res.RegisterAdvancement();
+                Advance();
+
+                if (CurrentToken.Type != Constants.TT.IDENTIFIER)
+                {
+                    return res.Failure(new InvalidSyntaxError("Expect identifier", CurrentToken.StartPos,
+                        CurrentToken.EndPos));
+                }
+
+                extends = CurrentToken;
+                res.RegisterAdvancement();
+                Advance();
+            }
 
             while (CurrentToken.Type == Constants.TT.NEWLINE)
             {
@@ -1283,7 +1301,7 @@ namespace IllusionScript.SDK
                 Advance();
             }
 
-
+            List<Node> staticItems = new List<Node>();
             List<Node> items = new List<Node>();
 
             while (!CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.END)))
@@ -1295,19 +1313,57 @@ namespace IllusionScript.SDK
                     continue;
                 }
 
-                if (CurrentToken.Matches(Constants.TT.KEYWORD,
-                    new TokenValue(typeof(string), Constants.Keyword.METHOD)))
+                Token contextIsolation = CurrentToken;
+                if (!contextIsolation.Matches(Constants.TT.KEYWORD,
+                        new TokenValue(typeof(string), Constants.Keyword.PUBLIC)) &&
+                    !contextIsolation.Matches(Constants.TT.KEYWORD,
+                        new TokenValue(typeof(string), Constants.Keyword.PRIVATE)))
                 {
-                    items.Add(res.Register(MethodExpr()));
+                    return res.Failure(new InvalidSyntaxError("Expected 'public' or 'private'", CurrentToken.StartPos,
+                        CurrentToken.EndPos));
+                }
+
+                res.RegisterAdvancement();
+                Advance();
+
+                bool isStatic = false;
+                if (CurrentToken.Matches(Constants.TT.KEYWORD,
+                        new TokenValue(typeof(string), Constants.Keyword.STATIC)))
+                {
+                    isStatic = true;
+                    res.RegisterAdvancement();
+                    Advance();
+                }
+
+                if (CurrentToken.Matches(Constants.TT.KEYWORD,
+                        new TokenValue(typeof(string), Constants.Keyword.METHOD)))
+                {
+                    if (isStatic)
+                    {
+                        staticItems.Add(res.Register(MethodExpr(contextIsolation)));
+                    }
+                    else
+                    {
+                        items.Add(res.Register(MethodExpr(contextIsolation)));
+                    }
+
                     if (res.Error != default(Error))
                     {
                         return res;
                     }
                 }
                 else if (CurrentToken.Matches(Constants.TT.KEYWORD,
-                    new TokenValue(typeof(string), Constants.Keyword.FIELD)))
+                             new TokenValue(typeof(string), Constants.Keyword.FIELD)))
                 {
-                    items.Add(res.Register(FieldExpr()));
+                    if (isStatic)
+                    {
+                        staticItems.Add(res.Register(FieldExpr(contextIsolation)));
+                    }
+                    else
+                    {
+                        items.Add(res.Register(FieldExpr(contextIsolation)));
+                    }
+
                     if (res.Error != default(Error))
                     {
                         return res;
@@ -1323,13 +1379,13 @@ namespace IllusionScript.SDK
             if (!CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.END)))
             {
                 return res.Failure(new InvalidSyntaxError(
-                    "Expected 'el'", CurrentToken.StartPos, CurrentToken.EndPos));
+                    "Expected 'end'", CurrentToken.StartPos, CurrentToken.EndPos));
             }
 
             res.RegisterAdvancement();
             Advance();
 
-            return res.Success(new ClassNode(className, items));
+            return res.Success(new ClassNode(className, items, staticItems, extends));
         }
 
         private ParserResult ClassConstructExpr()
@@ -1395,7 +1451,7 @@ namespace IllusionScript.SDK
             return res.Success(new ClassConstructorNode(expr, argNodes));
         }
 
-        private ParserResult FieldExpr()
+        private ParserResult FieldExpr(Token contextIsolation)
         {
             ParserResult res = new ParserResult();
 
@@ -1415,14 +1471,14 @@ namespace IllusionScript.SDK
                 return res;
             }
 
-            return res.Success(new FieldNode(varName, expr));
+            return res.Success(new FieldNode(contextIsolation, varName, expr));
         }
 
-        private ParserResult MethodExpr()
+        private ParserResult MethodExpr(Token contextIsolation)
         {
             ParserResult res = new ParserResult();
             if (!CurrentToken.Matches(Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), Constants.Keyword.METHOD)))
+                    new TokenValue(typeof(string), Constants.Keyword.METHOD)))
             {
                 return res.Failure(new InvalidSyntaxError(
                     "Expected 'method'", CurrentToken.StartPos, CurrentToken.EndPos));
@@ -1507,7 +1563,7 @@ namespace IllusionScript.SDK
                     return res;
                 }
 
-                return res.Success(new MethodDefineNode(varName, argName, body, true));
+                return res.Success(new MethodDefineNode(contextIsolation, varName, argName, body, true));
             }
 
             if (CurrentToken.Type != Constants.TT.NEWLINE)
@@ -1533,7 +1589,7 @@ namespace IllusionScript.SDK
             res.RegisterAdvancement();
             Advance();
 
-            return res.Success(new MethodDefineNode(varName, argName, body2, false));
+            return res.Success(new MethodDefineNode(contextIsolation, varName, argName, body2, false));
         }
 
         private ParserResult ExportExpr()
@@ -1582,7 +1638,7 @@ namespace IllusionScript.SDK
                 return res.Success(new ImportNode(startPos, CurrentToken.EndPos, path));
             }
             else if (tok.Matches(Constants.TT.HEAD_KEYWORD,
-                new TokenValue(typeof(string), Constants.HeadKeyword.IF)))
+                         new TokenValue(typeof(string), Constants.HeadKeyword.IF)))
             {
                 Node ifExpr = res.Register(IfExpr(true));
                 if (res.Error != default(Error))
@@ -1626,7 +1682,7 @@ namespace IllusionScript.SDK
                 opToken = CurrentToken;
                 res.RegisterAdvancement();
                 Advance();
-                rightNode = (NumberNode) res.Register(right());
+                rightNode = (NumberNode)res.Register(right());
                 if (res.Error != default(Error))
                 {
                     return res;

@@ -5,14 +5,15 @@ namespace IllusionScript.SDK.Values.Assets
 {
     public abstract class ClassItemValue : Value
     {
+        public Token ContextIsolation;
         public string Name;
-        public Value Value;
-        public ObjectValue Self;
+        public Value Self;
 
-        protected ClassItemValue(string name, Value value)
+        protected ClassItemValue(Token contextIsolation, string name, Value self)
         {
+            ContextIsolation = contextIsolation;
             Name = name;
-            Value = value;
+            Self = self;
         }
 
         protected Context GenerateNewContext()
@@ -63,11 +64,6 @@ namespace IllusionScript.SDK.Values.Assets
 
             PopulateArgs(argNames, args, context);
             return res.Success(NumberValue.Null);
-        }
-
-        public void SetThis(ObjectValue self)
-        {
-            
         }
     }
 }

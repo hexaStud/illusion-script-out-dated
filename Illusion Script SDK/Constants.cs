@@ -7,7 +7,7 @@ namespace IllusionScript.SDK
     {
         public static readonly string EOL = (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) ? "\n\r" : "\n";
         public const string TAB = "    ";
-        
+
         public static readonly char[] IGNORE_CHARACTERS = new char[]
         {
             ' ',
@@ -99,7 +99,7 @@ namespace IllusionScript.SDK
 
             public const string IF = "if";
             public const string THEN = "then";
-            public const string ELSE_IF = "elseif";
+            public const string ELSE_IF = "elif";
             public const string ELSE = "else";
 
             public const string FOR = "for";
@@ -112,15 +112,20 @@ namespace IllusionScript.SDK
             public const string CLASS = "class";
 
             public const string NEW = "new";
+            public const string EXTENDS = "extends";
             public const string THIS = "this";
 
-            public const string END = "el";
+            public const string PRIVATE = "private";
+            public const string PUBLIC = "public";
+            public const string STATIC = "static";
 
-            public const string RETURN = "ret";
-            public const string CONTINUE = "con";
+            public const string END = "end";
+
+            public const string RETURN = "return";
+            public const string CONTINUE = "continue";
             public const string BREAK = "break";
 
-            public const string EXPORT = "exp";
+            public const string EXPORT = "export";
 
             public static readonly string[] KEYWORDS = new string[]
             {
@@ -142,6 +147,10 @@ namespace IllusionScript.SDK
                 CLASS,
                 METHOD,
                 NEW,
+                EXTENDS,
+                PRIVATE,
+                PUBLIC,
+                STATIC,
                 END,
                 RETURN,
                 CONTINUE,

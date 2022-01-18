@@ -25,61 +25,61 @@ namespace IllusionScript.SDK
             switch (node.GetType().Name)
             {
                 case "BinOpNode":
-                    return VisitBinOpNode((BinOpNode) node, context);
+                    return VisitBinOpNode((BinOpNode)node, context);
                 case "UnaryOpNode":
-                    return VisitUnaryOpNode((UnaryOpNode) node, context);
+                    return VisitUnaryOpNode((UnaryOpNode)node, context);
                 case "NumberNode":
-                    return VisitNumberNode((NumberNode) node, context);
+                    return VisitNumberNode((NumberNode)node, context);
                 case "StringNode":
-                    return VisitStringNode((StringNode) node, context);
+                    return VisitStringNode((StringNode)node, context);
                 case "VarAccessNode":
-                    return VisitVarAccessNode((VarAccessNode) node, context);
+                    return VisitVarAccessNode((VarAccessNode)node, context);
                 case "VarAssignNode":
-                    return VisitVarAssignNode((VarAssignNode) node, context, editContext);
+                    return VisitVarAssignNode((VarAssignNode)node, context, editContext);
                 case "ConstAssignNode":
-                    return VisitConstAssignNode((ConstAssignNode) node, context);
+                    return VisitConstAssignNode((ConstAssignNode)node, context);
                 case "FieldNode":
-                    return VisitFieldNode((FieldNode) node, context);
+                    return VisitFieldNode((FieldNode)node, context);
                 case "IfNode":
-                    return VisitIfNode((IfNode) node, context);
+                    return VisitIfNode((IfNode)node, context);
                 case "ForNode":
-                    return VisitForNode((ForNode) node, context);
+                    return VisitForNode((ForNode)node, context);
                 case "WhileNode":
-                    return VisitWhileNode((WhileNode) node, context);
+                    return VisitWhileNode((WhileNode)node, context);
                 case "FunctionDefineNode":
-                    return VisitFunctionDefineNode((FunctionDefineNode) node, context);
+                    return VisitFunctionDefineNode((FunctionDefineNode)node, context);
                 case "MethodDefineNode":
-                    return VisitMethodDefineNode((MethodDefineNode) node, context);
+                    return VisitMethodDefineNode((MethodDefineNode)node, context);
                 case "ClassNode":
-                    return VisitClassNode((ClassNode) node, context);
+                    return VisitClassNode((ClassNode)node, context);
                 case "ClassConstructorNode":
-                    return VisitClassConstructorNode((ClassConstructorNode) node, context);
+                    return VisitClassConstructorNode((ClassConstructorNode)node, context);
                 case "CallNode":
-                    return VisitCallNode((CallNode) node, context);
+                    return VisitCallNode((CallNode)node, context);
                 case "ObjectCallNode":
-                    return VisitObjectCallNode((ObjectCallNode) node, context);
+                    return VisitObjectCallNode((ObjectCallNode)node, context);
                 case "ListNode":
-                    return VisitListNode((ListNode) node, context);
+                    return VisitListNode((ListNode)node, context);
                 case "ObjectNode":
-                    return VisitObjectNode((ObjectNode) node, context);
+                    return VisitObjectNode((ObjectNode)node, context);
                 case "ObjectAccessNode":
-                    return VisitObjectAccessNode((ObjectAccessNode) node, context);
+                    return VisitObjectAccessNode((ObjectAccessNode)node, context);
                 case "ObjectAssignNode":
-                    return VisitObjectAssignNode((ObjectAssignNode) node, context);
+                    return VisitObjectAssignNode((ObjectAssignNode)node, context);
                 case "ReturnNode":
-                    return VisitReturnNode((ReturnNode) node, context);
+                    return VisitReturnNode((ReturnNode)node, context);
                 case "ContinueNode":
-                    return VisitContinueNode((ContinueNode) node, context);
+                    return VisitContinueNode((ContinueNode)node, context);
                 case "BreakNode":
-                    return VisitBreakNode((BreakNode) node, context);
+                    return VisitBreakNode((BreakNode)node, context);
                 case "ImportNode":
-                    return VisitImportNode((ImportNode) node, context);
+                    return VisitImportNode((ImportNode)node, context);
                 case "HeadIfNode":
-                    return VisitHeadIfNode((HeadIfNode) node, context);
+                    return VisitHeadIfNode((HeadIfNode)node, context);
                 case "ExportNode":
-                    return VisitExportNode((ExportNode) node, context);
+                    return VisitExportNode((ExportNode)node, context);
                 case "MainNode":
-                    return VisitMainNode((MainNode) node, context);
+                    return VisitMainNode((MainNode)node, context);
                 default:
                     throw NoVisitMethod(node, context);
             }
@@ -222,7 +222,7 @@ namespace IllusionScript.SDK
                 number = data.Item2;
             }
             else if (node.OpToken.Matches(Constants.TT.KEYWORD,
-                new TokenValue(typeof(string), Constants.Keyword.NOT)))
+                         new TokenValue(typeof(string), Constants.Keyword.NOT)))
             {
                 Tuple<Error, Value> data = number.Notted();
                 error = data.Item1;
@@ -348,7 +348,7 @@ namespace IllusionScript.SDK
                 return res;
             }
 
-            return res.Success(new FieldValue(node.Token.Value.GetAsString(), value));
+            return res.Success(new FieldValue(node.ContextIsolation, node.Token.Value.GetAsString(), value));
         }
 
         private RuntimeResult VisitIfNode(IfNode node, Context context)
@@ -394,13 +394,13 @@ namespace IllusionScript.SDK
             RuntimeResult res = new RuntimeResult();
             List<Value> elements = new List<Value>();
 
-            NumberValue startValue = (NumberValue) res.Register(Visit(node.StartValue, context));
+            NumberValue startValue = (NumberValue)res.Register(Visit(node.StartValue, context));
             if (res.ShouldReturn())
             {
                 return res;
             }
 
-            NumberValue endValue = (NumberValue) res.Register(Visit(node.EndValue, context));
+            NumberValue endValue = (NumberValue)res.Register(Visit(node.EndValue, context));
             if (res.ShouldReturn())
             {
                 return res;
@@ -410,7 +410,7 @@ namespace IllusionScript.SDK
 
             if (node.StepValue != default(Node))
             {
-                stepValue = (NumberValue) res.Register(Visit(node.StepValue, context));
+                stepValue = (NumberValue)res.Register(Visit(node.StepValue, context));
                 if (res.ShouldReturn())
                 {
                     return res;
@@ -555,8 +555,10 @@ namespace IllusionScript.SDK
                 argNames.Add(token.Value.GetAsString());
             }
 
-            Value funcValue = new MethodValue(funcName, bodyNode, argNames, node.ShouldAutoReturn).SetContext(context)
-                .SetPosition(node.StartPos, node.EndPos);
+            Value funcValue =
+                new MethodValue(node.ContextIsolation, funcName, bodyNode, argNames, node.ShouldAutoReturn)
+                    .SetContext(context)
+                    .SetPosition(node.StartPos, node.EndPos);
 
             return res.Success(funcValue);
         }
@@ -567,22 +569,61 @@ namespace IllusionScript.SDK
 
             string className = node.Name.Value.GetAsString();
             List<ClassItemValue> fields = new List<ClassItemValue>();
-            foreach (Node method in node.Fields)
+            foreach (Node field in node.Fields)
             {
-                if (method.GetType() != typeof(MethodDefineNode) && method.GetType() != typeof(FieldNode))
+                if (field.GetType() != typeof(MethodDefineNode) && field.GetType() != typeof(FieldNode))
                 {
                     return res.Failure(new RuntimeError(
-                        "Can only declare methods and fields in classes", context, method.StartPos, method.EndPos));
+                        "Can only declare methods and fields in classes", context, field.StartPos, field.EndPos));
                 }
 
-                fields.Add((ClassItemValue) res.Register(Visit(method, context, false)));
+                fields.Add((ClassItemValue)res.Register(Visit(field, context, false)));
                 if (res.ShouldReturn())
                 {
                     return res;
                 }
             }
 
-            Value classValue = new ClassValue(className, fields).SetContext(context)
+            List<ClassItemValue> staticFields = new List<ClassItemValue>();
+            foreach (Node field in node.StaticFields)
+            {
+                if (field.GetType() != typeof(MethodDefineNode) && field.GetType() != typeof(FieldNode))
+                {
+                    return res.Failure(new RuntimeError(
+                        "Can only declare methods and fields in classes", context, field.StartPos, field.EndPos));
+                }
+
+                staticFields.Add((ClassItemValue)res.Register(Visit(field, context, false)));
+                if (res.ShouldReturn())
+                {
+                    return res;
+                }
+            }
+
+            ClassValue value = default;
+            if (node.Extends != default(Token))
+            {
+                string name = node.Extends.Value.GetAsString();
+                if (context.SymbolTable.HasInAll(name))
+                {
+                    Value extender = context.SymbolTable.Get(name).Value;
+                    if (extender.GetType() != typeof(ClassValue))
+                    {
+                        return res.Failure(new RuntimeError($"Extends value '{name}' is not a class", context,
+                            node.StartPos, node.EndPos));
+                    }
+
+                    value = (ClassValue)extender;
+                }
+                else
+                {
+                    return res.Failure(
+                        new RuntimeError($"'{name}' is not defined", context, node.StartPos, node.EndPos));
+                }
+            }
+
+
+            Value classValue = new ClassValue(className, fields, staticFields, value).SetContext(context)
                 .SetPosition(node.StartPos, node.EndPos);
 
             if (context.SymbolTable.IsConstants(className))
@@ -611,7 +652,7 @@ namespace IllusionScript.SDK
                     $"Can only construct class not '{value.__repr__(0)}'", context, node.StartPos, node.EndPos));
             }
 
-            ClassValue classValue = (ClassValue) value;
+            ClassValue classValue = (ClassValue)value;
             value = res.Register(classValue.Construct(new List<Value>())).SetPosition(node.StartPos, node.EndPos);
 
             return res.Success(value);
@@ -652,7 +693,7 @@ namespace IllusionScript.SDK
         {
             RuntimeResult res = new RuntimeResult();
             List<Value> args = new List<Value>();
-            ObjectAccessNode funcNode = (ObjectAccessNode) node.Node;
+            ObjectAccessNode funcNode = (ObjectAccessNode)node.Node;
 
             Value funcValue = res.Register(Visit(funcNode, context));
             if (res.ShouldReturn())
@@ -660,7 +701,20 @@ namespace IllusionScript.SDK
                 return res;
             }
 
-            Console.WriteLine(funcNode.Tokens[0].__repr__());
+            if (funcValue.GetType() == typeof(MethodValue))
+            {
+                MethodValue method = (MethodValue)funcValue;
+                if (method.ContextIsolation.Matches(Constants.TT.KEYWORD,
+                        new TokenValue(typeof(string), Constants.Keyword.PRIVATE)) && !funcNode.Tokens[0]
+                        .Matches(Constants.TT.IDENTIFIER, new TokenValue(typeof(string), Constants.Keyword.THIS)))
+                {
+                    return res.Failure(new RuntimeError(
+                        $"Cannot access private method '{method.Name}' with outer scope", context,
+                        node.StartPos,
+                        node.EndPos));
+                }
+            }
+
             Value dataObj = res.Register(Visit(new VarAccessNode(funcNode.Tokens[0]), context));
             if (res.ShouldReturn())
             {
@@ -728,6 +782,12 @@ namespace IllusionScript.SDK
             tokens.RemoveAt(0);
             Token start = current;
             Value variable = res.Register(Visit(new VarAccessNode(current), context));
+            if (variable.GetType() == typeof(ClassValue))
+            {
+                ClassValue c = (ClassValue)variable;
+                variable = c.StaticObject;
+            }
+
             if (res.ShouldReturn())
             {
                 return res;
@@ -742,7 +802,7 @@ namespace IllusionScript.SDK
 
                     if (variable.GetType() == typeof(ObjectValue))
                     {
-                        ObjectValue rr = (ObjectValue) variable;
+                        ObjectValue rr = (ObjectValue)variable;
                         if (!rr.Elements.ContainsKey(current.Value.GetAsString()))
                         {
                             return res.Failure(new RuntimeError(
@@ -759,7 +819,7 @@ namespace IllusionScript.SDK
                             return res.Failure(new RuntimeError("Expected int", context, node.StartPos, node.EndPos));
                         }
 
-                        ListValue rr = (ListValue) variable;
+                        ListValue rr = (ListValue)variable;
 
                         int index = current.Value.GetAsInt();
                         if (index < 0 || index > rr.Elements.Count - 1)
@@ -780,6 +840,41 @@ namespace IllusionScript.SDK
                 }
             }
 
+            if (variable.GetType() == typeof(MethodValue))
+            {
+                MethodValue method = (MethodValue)variable;
+                if (method.ContextIsolation.Matches(Constants.TT.KEYWORD,
+                        new TokenValue(typeof(string), Constants.Keyword.PRIVATE)) && !node.Tokens[0]
+                        .Matches(Constants.TT.IDENTIFIER, new TokenValue(typeof(string), Constants.Keyword.THIS)))
+                {
+                    return res.Failure(new RuntimeError(
+                        $"Cannot access private method '{method.Name}' with outer scope", context,
+                        node.StartPos,
+                        node.EndPos));
+                }
+                else
+                {
+                    return res.Success(method);
+                }
+            }
+            else if (variable.GetType() == typeof(FieldValue))
+            {
+                FieldValue field = (FieldValue)variable;
+                if (field.ContextIsolation.Matches(Constants.TT.KEYWORD,
+                        new TokenValue(typeof(string), Constants.Keyword.PRIVATE)) && !node.Tokens[0]
+                        .Matches(Constants.TT.IDENTIFIER, new TokenValue(typeof(string), Constants.Keyword.THIS)))
+                {
+                    return res.Failure(new RuntimeError(
+                        $"Cannot access private field '{field.Name}' with outer scope", context,
+                        node.StartPos,
+                        node.EndPos));
+                }
+                else
+                {
+                    return res.Success(field.Value);
+                }
+            }
+
             return res.Success(variable);
         }
 
@@ -792,66 +887,65 @@ namespace IllusionScript.SDK
             Token start = current;
             List<KeyValuePair<Token, Value>> stack = new List<KeyValuePair<Token, Value>>();
             Value variable = res.Register(Visit(new VarAccessNode(current), context));
-            stack.Add(new KeyValuePair<Token, Value>(current, variable));
             if (res.ShouldReturn())
             {
                 return res;
             }
 
-            if (tokens.Count != 0)
+            stack.Add(new KeyValuePair<Token, Value>(current, variable));
+
+            while (tokens.Count != 0)
             {
-                while (tokens.Count != 0)
+                current = tokens[0];
+                tokens.RemoveAt(0);
+
+                if (variable.GetType() == typeof(ObjectValue))
                 {
-                    current = tokens[0];
-                    tokens.RemoveAt(0);
-
-                    if (current.GetType() == typeof(ObjectValue))
+                    ObjectValue rr = (ObjectValue)variable;
+                    if (!rr.Elements.ContainsKey(current.Value.GetAsString()) && tokens.Count != 0)
                     {
-                        ObjectValue rr = (ObjectValue) variable;
-                        if (!rr.Elements.ContainsKey(current.Value.GetAsString()))
-                        {
-                            return res.Failure(new RuntimeError(
-                                $"'{current.Value.GetAsString()}' is not defined in the object '{start.Value.GetAsString()}'",
-                                context, node.StartPos, node.EndPos));
-                        }
-
-                        stack.Add(new KeyValuePair<Token, Value>(current, variable));
-                        if (tokens.Count != 0)
-                        {
-                            variable = rr.Elements[current.Value.GetAsString()];
-                        }
-                    }
-                    else if (variable.GetType() == typeof(ListValue))
-                    {
-                        if (current.Type != Constants.TT.INT)
-                        {
-                            return res.Failure(new RuntimeError("Expected int", context, node.StartPos, node.EndPos));
-                        }
-
-                        ListValue rr = (ListValue) variable;
-
-                        int index = current.Value.GetAsInt();
-                        if (index < 0 || index > rr.Elements.Count - 1)
-                        {
-                            return res.Failure(new RuntimeError("Int is out of bounds of the list", context,
-                                node.StartPos, node.EndPos));
-                        }
-
-                        stack.Add(new KeyValuePair<Token, Value>(current, variable));
-                        if (tokens.Count != 0)
-                        {
-                            variable = rr.Elements[index];
-                        }
+                        return res.Failure(new RuntimeError(
+                            $"'{current.Value.GetAsString()}' is not defined in the object '{start.Value.GetAsString()}'",
+                            context, node.StartPos, node.EndPos));
                     }
 
-                    if (tokens.Count != 0 && variable.GetType() != typeof(ObjectValue) &&
-                        variable.GetType() != typeof(ListValue))
+                    stack.Add(new KeyValuePair<Token, Value>(current, variable));
+                    if (tokens.Count != 0)
                     {
-                        return res.Failure(new RuntimeError($"Cannot access on '{variable.__repr__(0)}'", context,
-                            node.StartPos, node.EndPos));
+                        variable = rr.Elements[current.Value.GetAsString()];
                     }
                 }
+                else if (variable.GetType() == typeof(ListValue))
+                {
+                    if (current.Type != Constants.TT.INT)
+                    {
+                        return res.Failure(new RuntimeError("Expected int", context, node.StartPos, node.EndPos));
+                    }
+
+                    ListValue rr = (ListValue)variable;
+
+                    int index = current.Value.GetAsInt();
+                    if (index < 0 || index > rr.Elements.Count - 1 && tokens.Count != 0)
+                    {
+                        return res.Failure(new RuntimeError("Int is out of bounds of the list", context,
+                            node.StartPos, node.EndPos));
+                    }
+
+                    stack.Add(new KeyValuePair<Token, Value>(current, variable));
+                    if (tokens.Count != 0)
+                    {
+                        variable = rr.Elements[index];
+                    }
+                }
+
+                if (tokens.Count != 0 && variable.GetType() != typeof(ObjectValue) &&
+                    variable.GetType() != typeof(ListValue))
+                {
+                    return res.Failure(new RuntimeError($"Cannot access on '{variable.__repr__(0)}'", context,
+                        node.StartPos, node.EndPos));
+                }
             }
+
 
             variable = res.Register(Visit(node.Value, context));
             if (res.ShouldReturn())
@@ -870,13 +964,13 @@ namespace IllusionScript.SDK
                 stack.RemoveAt(0);
                 if (part.Value.GetType() == typeof(ObjectValue))
                 {
-                    ObjectValue rr = (ObjectValue) part.Value;
+                    ObjectValue rr = (ObjectValue)part.Value;
                     rr.Elements[part.Key.Value.GetAsString()] = variable;
                     replace = rr;
                 }
                 else if (part.Value.GetType() == typeof(ListValue))
                 {
-                    ListValue rr = (ListValue) part.Value;
+                    ListValue rr = (ListValue)part.Value;
                     rr.Elements[part.Key.Value.GetAsInt()] = variable;
                     replace = rr;
                 }
@@ -1022,7 +1116,7 @@ namespace IllusionScript.SDK
 
         private RuntimeResult VisitExportNode(ExportNode node, Context context)
         {
-            FunctionDefineNode func = (FunctionDefineNode) node.Func;
+            FunctionDefineNode func = (FunctionDefineNode)node.Func;
             if (func.VarName == default(Token))
             {
                 return new RuntimeResult().Failure(new RuntimeError(
@@ -1036,7 +1130,7 @@ namespace IllusionScript.SDK
             }
 
             string exportName = func.VarName.Value.GetAsString();
-            Exports[exportName] = (FunctionValue) res.Value;
+            Exports[exportName] = (FunctionValue)res.Value;
             return new RuntimeResult().Success(NumberValue.Null);
         }
 
@@ -1046,7 +1140,7 @@ namespace IllusionScript.SDK
             SymbolTable symbolTable = context.SymbolTable;
             if (symbolTable.HasInCurrent("main"))
             {
-                FunctionValue func = (FunctionValue) symbolTable.Get("main").Value;
+                FunctionValue func = (FunctionValue)symbolTable.Get("main").Value;
                 if (func.ArgNames.Count == 2)
                 {
                     if (func.ArgNames[0] == "argv" && func.ArgNames[1] == "argc")
