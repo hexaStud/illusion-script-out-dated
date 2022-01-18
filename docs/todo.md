@@ -1,0 +1,18 @@
+DEV:
+- Data Types
+    - [ ] Number
+    - [ ] String
+    - [ ] List
+    - [ ] Object
+- Syntax
+    - [ ] Function Export
+    - [ ] Loops
+- Modules
+    - [ ] std
+    - [ ] os
+    - [ ] fs
+    - [ ] math
+- Errors
+    - [ ] Invalid Syntax Error
+    - [ ] Runtime Error
+- [ ] Future of Illusion Script
