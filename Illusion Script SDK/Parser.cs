@@ -109,6 +109,7 @@ namespace IllusionScript.SDK
                     continue;
                 }
 
+                
                 statements.Add(statement);
             }
 
