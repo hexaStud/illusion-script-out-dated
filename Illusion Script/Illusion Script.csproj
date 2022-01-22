@@ -14,6 +14,9 @@
         <ProjectReference Include="..\os\os.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
         </ProjectReference>
+        <ProjectReference Include="..\system\system.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -32,9 +35,10 @@
         </None>
     </ItemGroup>
     <Target Name="Libs" AfterTargets="AfterBuild">
-        <Message Text="Build Libaries ..." />
+        <Message Text="Copy Libaries ..." />
         <Copy SourceFiles="../std/bin/Debug/net5.0/std.dll" DestinationFolder="$(OutDir)/ext/" />
         <Copy SourceFiles="../os/bin/Debug/net5.0/os.dll" DestinationFolder="$(OutDir)/ext/" />
+        <Copy SourceFiles="../system/bin/Debug/net5.0/system.dll" DestinationFolder="$(OutDir)/ext/" />
     </Target>
     <Target Name="Remove" AfterTargets="AfterBuild">
         <Message Text="Deleting unimportant files" />

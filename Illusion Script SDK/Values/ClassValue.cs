@@ -5,18 +5,11 @@ namespace IllusionScript.SDK.Values
 {
     public class ClassValue : BaseClassValue
     {
-        public List<ClassItemValue> Fields;
-        public List<ClassItemValue> StaticFields;
-        public ObjectValue StaticObject;
-        public ClassValue Extends;
+        public readonly ObjectValue StaticObject;
 
         public ClassValue(string name, List<ClassItemValue> fields, List<ClassItemValue> staticFields,
-            ClassValue extends = default) : base(name)
+            BaseClassValue extends = default) : base(name, fields, staticFields, extends)
         {
-            Fields = fields;
-            StaticFields = staticFields;
-            Extends = extends;
-
             Dictionary<string, Value> staticObj = BuildStaticFields(staticFields);
             StaticObject = new ObjectValue(staticObj);
             StaticObject.SetContext(Context).SetPosition(StartPos, EndPos);
@@ -24,13 +17,14 @@ namespace IllusionScript.SDK.Values
 
         public override RuntimeResult Construct(List<Value> args)
         {
+            ConstructorArgs = args;
             RuntimeResult res = new RuntimeResult();
             Dictionary<string, Value> objData = ConvertFields(Fields);
-            Context context = new Context($"<Class {Name}>", Context, StartPos);
+            Context context = new Context($"<class {Name}>", Context, StartPos);
             context.SymbolTable = new SymbolTable(Context.SymbolTable);
 
             objData["constructor"] =
-                new ObjectValue(CreateConstructor(this, args)).SetContext(context).SetPosition(StartPos, EndPos);
+                new ObjectValue(CreateConstructor(this)).SetContext(context).SetPosition(StartPos, EndPos);
 
             ObjectValue classObj = new ObjectValue(objData);
             classObj.SetContext(context).SetPosition(StartPos, EndPos);
@@ -40,7 +34,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            ClassValue value = new ClassValue(Name, Fields, StaticFields);
+            Value value = new ClassValue(Name, Fields, StaticFields, Extends);
             value.SetContext(Context);
             value.SetPosition(StartPos, EndPos);
             return value;

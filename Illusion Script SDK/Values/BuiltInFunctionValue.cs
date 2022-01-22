@@ -6,9 +6,9 @@ namespace IllusionScript.SDK.Values
 {
     public class BuiltInFunctionValue : BaseFunctionValue
     {
-        public static Dictionary<string, IBuiltInFunction> BaseInFunctions = new Dictionary<string, IBuiltInFunction>();
+        private static readonly Dictionary<string, IBuiltInFunction> BaseInFunctions = new Dictionary<string, IBuiltInFunction>();
 
-        public BuiltInFunctionValue(string name) : base(name)
+        private BuiltInFunctionValue(string name) : base(name)
         {
         }
 

@@ -7,7 +7,7 @@ namespace IllusionScript.SDK
 {
     public static class Executor
     {
-        public static Tuple<Error, Value, Dictionary<string, FunctionValue>> Run(string text, string fileName,
+        public static Tuple<Error, Value, Dictionary<string, Value>> Run(string text, string fileName,
             string filePath, Context context,
             bool main = false)
         {
@@ -16,7 +16,7 @@ namespace IllusionScript.SDK
 
             if (res.Item1 != default(Error))
             {
-                return new Tuple<Error, Value, Dictionary<string, FunctionValue>>(res.Item1, default, default);
+                return new Tuple<Error, Value, Dictionary<string, Value>>(res.Item1, default, default);
             }
 
             Parser parser = new Parser(res.Item2);
@@ -24,7 +24,7 @@ namespace IllusionScript.SDK
 
             if (parserResult.Error != default(Error))
             {
-                return new Tuple<Error, Value, Dictionary<string, FunctionValue>>(parserResult.Error, default, default);
+                return new Tuple<Error, Value, Dictionary<string, Value>>(parserResult.Error, default, default);
             }
 
             ListNode node = (ListNode) parserResult.Node;
@@ -35,7 +35,7 @@ namespace IllusionScript.SDK
 
             Interpreter interpreter = new Interpreter();
             RuntimeResult interpreterResult = interpreter.Visit(node, context);
-            return new Tuple<Error, Value, Dictionary<string, FunctionValue>>(interpreterResult.Error,
+            return new Tuple<Error, Value, Dictionary<string, Value>>(interpreterResult.Error,
                 interpreterResult.Value, interpreter.Exports);
         }
     }

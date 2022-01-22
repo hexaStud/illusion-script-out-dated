@@ -181,29 +181,31 @@ namespace IllusionScript.SDK
                 res.RegisterAdvancement();
                 Advance();
 
-                if (CurrentToken.Type != Constants.TT.EQUALS)
+                Node expr = new NullNode(CurrentToken.StartPos, CurrentToken.EndPos);
+                if (CurrentToken.Type != Constants.TT.EQUALS && variableType == Constants.Keyword.CONST)
                 {
-                    return res.Failure(new InvalidSyntaxError("Expected '='", CurrentToken.StartPos,
-                        CurrentToken.EndPos));
+                    return res.Failure(new InvalidSyntaxError("Constants must be declared with a value",
+                        CurrentToken.StartPos, CurrentToken.EndPos));
                 }
 
-                res.RegisterAdvancement();
-                Advance();
-                Node expr = res.Register(Expr());
-                if (res.Error != default(Error))
+                if (CurrentToken.Type == Constants.TT.EQUALS)
                 {
-                    return res;
+                    res.RegisterAdvancement();
+                    Advance();
+                    expr = res.Register(Expr());
+                    if (res.Error != default(Error))
+                    {
+                        return res;
+                    }
+                }
+
+                if (variableType == Constants.Keyword.VAR)
+                {
+                    return res.Success(new VarAssignNode(varName, expr, true));
                 }
                 else
                 {
-                    if (variableType == Constants.Keyword.VAR)
-                    {
-                        return res.Success(new VarAssignNode(varName, expr, true));
-                    }
-                    else
-                    {
-                        return res.Success(new ConstAssignNode(varName, expr));
-                    }
+                    return res.Success(new ConstAssignNode(varName, expr));
                 }
             }
 
@@ -1465,10 +1467,20 @@ namespace IllusionScript.SDK
                     CurrentToken.EndPos));
             }
 
-            Node expr = res.Register(Expr());
-            if (res.Error != default(Error))
+            res.RegisterAdvancement();
+            Advance();
+
+            Node expr = new NullNode(CurrentToken.StartPos, CurrentToken.EndPos);
+            if (CurrentToken.Type == Constants.TT.EQUALS)
             {
-                return res;
+                res.RegisterAdvancement();
+                Advance();
+
+                expr = res.Register(Expr());
+                if (res.Error != default(Error))
+                {
+                    return res;
+                }
             }
 
             return res.Success(new FieldNode(contextIsolation, varName, expr));
@@ -1600,10 +1612,12 @@ namespace IllusionScript.SDK
             res.RegisterAdvancement();
             Advance();
 
-            if (!CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.FUNCTION)))
+            if (!CurrentToken.Matches(Constants.TT.KEYWORD,
+                    new TokenValue(typeof(string), Constants.Keyword.FUNCTION)) &&
+                !CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.CLASS)))
             {
                 return res.Failure(new InvalidSyntaxError(
-                    "Expected define", startPos, CurrentToken.EndPos));
+                    "Expected 'define' or 'class'", startPos, CurrentToken.EndPos));
             }
 
             Node expr = res.Register(Expr());
@@ -1612,7 +1626,22 @@ namespace IllusionScript.SDK
                 return res;
             }
 
-            return res.Success(new ExportNode(startPos, CurrentToken.EndPos, expr));
+            if (expr.GetType() == typeof(FunctionDefineNode))
+            {
+                FunctionDefineNode func = (FunctionDefineNode)expr;
+                return res.Success(
+                    new ExportNode(startPos, CurrentToken.EndPos, expr, func.VarName.Value.GetAsString()));
+            }
+            else if (expr.GetType() == typeof(ClassNode))
+            {
+                ClassNode func = (ClassNode)expr;
+                return res.Success(
+                    new ExportNode(startPos, CurrentToken.EndPos, expr, func.Name.Value.GetAsString()));
+            }
+            else
+            {
+                throw new Exception($"Undefined export type {expr.GetType().Name}");
+            }
         }
 
         private ParserResult HeadExpr()

@@ -65,5 +65,11 @@ namespace IllusionScript.SDK.Values.Assets
             PopulateArgs(argNames, args, context);
             return res.Success(NumberValue.Null);
         }
+
+        public static readonly Token PUBLIC =
+            new Token(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.PUBLIC));
+
+        public static readonly Token PRIVATE =
+            new Token(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.PRIVATE));
     }
 }

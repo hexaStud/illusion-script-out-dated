@@ -182,6 +182,7 @@ namespace IllusionScript.SDK
         public static class Config
         {
             public static bool FileImport = false;
+            public static bool FileExport = false;
         }
     }
 }

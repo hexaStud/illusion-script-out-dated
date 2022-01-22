@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using IllusionScript.SDK;
 using IllusionScript.SDK.Errors;
-using IllusionScript.SDK.Plugin;
 using IllusionScript.SDK.Values;
+using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.Lib.std
 {
-    public class Count : IPlugin
+    public class Count : IBuiltInFunction
     {
         public static string Name = "count";
         public List<string> Args { get; } = new List<string>() {"ele"};

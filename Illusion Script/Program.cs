@@ -31,6 +31,8 @@ namespace IllusionScript
 
             List<string> fileImport = Config.Read("Config", "allowFileImport");
             Constants.Config.FileImport =  fileImport.Count > 0 && fileImport[0] == "true";
+            List<string> fileExport = Config.Read("Config", "allowFileExport");
+            Constants.Config.FileExport =  fileExport.Count > 0 && fileExport[0] == "true";
         }
 
         public static void Main(string[] args)
@@ -124,7 +126,7 @@ namespace IllusionScript
             Context context = new Context("<program>");
             context.SymbolTable = SymbolTable.GlobalSymbols;
 
-            Tuple<Error, Value, Dictionary<string, FunctionValue>> res = Executor.Run(data, fileName, filepath, context,
+            Tuple<Error, Value, Dictionary<string, Value>> res = Executor.Run(data, fileName, filepath, context,
                 main);
             if (res.Item1 != default(Error))
             {

@@ -4,9 +4,9 @@ namespace IllusionScript.SDK
 {
     public class SymbolTable
     {
-        public static SymbolTable GlobalSymbols = new SymbolTable();
-        public Dictionary<string, SymbolTableValue> Symbols;
-        public SymbolTable Parent;
+        public static readonly SymbolTable GlobalSymbols = new SymbolTable();
+        private readonly Dictionary<string, SymbolTableValue> Symbols;
+        private readonly SymbolTable Parent;
 
         public SymbolTable()
         {

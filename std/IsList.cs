@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using IllusionScript.SDK;
-using IllusionScript.SDK.Plugin;
 using IllusionScript.SDK.Values;
+using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.Lib.std
 {
-    public class IsList : IPlugin
+    public class IsList : IBuiltInFunction
     {
         public static string Name = "isList";
         

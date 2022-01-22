@@ -13,11 +13,11 @@ namespace IllusionScript.SDK
     public class Interpreter
     {
         public static List<string> Argv = new List<string>();
-        public Dictionary<string, FunctionValue> Exports;
+        public Dictionary<string, Value> Exports;
 
         public Interpreter()
         {
-            Exports = new Dictionary<string, FunctionValue>();
+            Exports = new Dictionary<string, Value>();
         }
 
         public RuntimeResult Visit(Node node, Context context, bool editContext = true)
@@ -32,6 +32,8 @@ namespace IllusionScript.SDK
                     return VisitNumberNode((NumberNode)node, context);
                 case "StringNode":
                     return VisitStringNode((StringNode)node, context);
+                case "NullNode":
+                    return VisitNullNode((NullNode)node, context);
                 case "VarAccessNode":
                     return VisitVarAccessNode((VarAccessNode)node, context);
                 case "VarAssignNode":
@@ -252,6 +254,12 @@ namespace IllusionScript.SDK
             return new RuntimeResult().Success(
                 new StringValue(new TokenValue(typeof(string), node.Token.Value.Value))
                     .SetContext(context).SetPosition(node.StartPos, node.EndPos));
+        }
+
+        private RuntimeResult VisitNullNode(NullNode node, Context context)
+        {
+            return new RuntimeResult().Success(NumberValue.Null.SetContext(context)
+                .SetPosition(node.StartPos, node.EndPos));
         }
 
         private RuntimeResult VisitVarAccessNode(VarAccessNode node, Context context)
@@ -654,6 +662,17 @@ namespace IllusionScript.SDK
 
             ClassValue classValue = (ClassValue)value;
             value = res.Register(classValue.Construct(new List<Value>())).SetPosition(node.StartPos, node.EndPos);
+            if (classValue.Constructor != default(MethodValue))
+            {
+                Context constructorContext = new Context($"<class {classValue.Name}>", context, classValue.StartPos);
+                constructorContext.SymbolTable = new SymbolTable(context.SymbolTable);
+
+                res.Register(classValue.Constructor.Execute(classValue.ConstructorArgs, value));
+                if (res.ShouldReturn())
+                {
+                    return res;
+                }
+            }
 
             return res.Success(value);
         }
@@ -1027,7 +1046,7 @@ namespace IllusionScript.SDK
                 if (!Constants.Config.FileImport)
                 {
                     return new RuntimeResult().Failure(new RuntimeError(
-                        "File import is disabled in the ils.ini", context, node.StartPos, node.EndPos));
+                        "File import is disabled in ils.ini", context, node.StartPos, node.EndPos));
                 }
 
                 value = Path.Join(node.StartPos.Filepath, value);
@@ -1037,16 +1056,16 @@ namespace IllusionScript.SDK
                     FileInfo fileInfo = new FileInfo(value);
                     Context importContext = new Context("<@import>");
                     importContext.SymbolTable = new SymbolTable();
-                    Tuple<Error, Value, Dictionary<string, FunctionValue>> res = Executor.Run(data, fileInfo.Name,
+                    Tuple<Error, Value, Dictionary<string, Value>> res = Executor.Run(data, fileInfo.Name,
                         fileInfo.DirectoryName, importContext);
                     if (res.Item1 != default(Error))
                     {
                         return new RuntimeResult().Failure(res.Item1);
                     }
 
-                    if (res.Item3 != default(Dictionary<string, FunctionValue>))
+                    if (res.Item3 != default(Dictionary<string, Value>))
                     {
-                        foreach (KeyValuePair<string, FunctionValue> functionValue in res.Item3)
+                        foreach (KeyValuePair<string, Value> functionValue in res.Item3)
                         {
                             SymbolTable.GlobalSymbols.Set(functionValue.Key, functionValue.Value);
                         }
@@ -1116,21 +1135,30 @@ namespace IllusionScript.SDK
 
         private RuntimeResult VisitExportNode(ExportNode node, Context context)
         {
-            FunctionDefineNode func = (FunctionDefineNode)node.Func;
-            if (func.VarName == default(Token))
+            if (!Constants.Config.FileExport)
             {
                 return new RuntimeResult().Failure(new RuntimeError(
-                    "Cannot export anonymous function", context, node.StartPos, node.EndPos));
+                    "Export is disabled in ils.ini", context, node.StartPos, node.EndPos));
             }
 
-            RuntimeResult res = Visit(func, context);
+            if (node.Func.GetType() == typeof(FunctionDefineNode))
+            {
+                FunctionDefineNode func = (FunctionDefineNode)node.Func;
+                if (func.VarName == default(Token))
+                {
+                    return new RuntimeResult().Failure(new RuntimeError(
+                        "Cannot export anonymous function", context, node.StartPos, node.EndPos));
+                }
+            }
+
+            RuntimeResult res = Visit(node.Func, context);
             if (res.ShouldReturn())
             {
                 return res;
             }
 
-            string exportName = func.VarName.Value.GetAsString();
-            Exports[exportName] = (FunctionValue)res.Value;
+            string exportName = node.Name;
+            Exports[exportName] = res.Value;
             return new RuntimeResult().Success(NumberValue.Null);
         }
 
