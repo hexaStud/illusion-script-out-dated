@@ -11,7 +11,7 @@ namespace IllusionScript.SDK.Bundler
         private Json(string str)
         {
             Objs = new Dictionary<string, string>();
-            string[][] objs = Array.Empty<string[]>();
+            string[][] objs;
             if (str.StartsWith("{") && str.EndsWith("}"))
             {
                 IsArray = false;
@@ -35,7 +35,7 @@ namespace IllusionScript.SDK.Bundler
 
         private string[][] BuildObj(string str)
         {
-            str = str.Substring(1, str.Length - 1);
+            str = str.Substring(1, str.Length - 2);
             string[] objs = Split(str);
 
             List<string[]> json = new List<string[]>();
@@ -80,7 +80,7 @@ namespace IllusionScript.SDK.Bundler
 
         private string[][] BuildArray(string str)
         {
-            str = str.Substring(1, str.Length - 1);
+            str = str.Substring(1, str.Length - 2);
             string[] objs = Split(str);
 
             List<string[]> json = new List<string[]>();
@@ -94,7 +94,8 @@ namespace IllusionScript.SDK.Bundler
                     obj = obj.Substring(0, obj.Length - 1);
                 }
 
-                json.Add(new string[] { '"' + index.ToString() + '"', obj });
+                json.Add(new [] { '"' + index.ToString() + '"', obj });
+                index++;
             }
 
             return json.ToArray();
@@ -180,7 +181,7 @@ namespace IllusionScript.SDK.Bundler
             if (Objs.ContainsKey(name))
             {
                 string obj = Objs[name];
-                if (obj.StartsWith('"') && obj.EndsWith('"'))
+                if (obj.StartsWith('[') && obj.EndsWith(']') || obj.StartsWith("{") && obj.EndsWith("}"))
                 {
                     return BuildByString(obj);
                 }
@@ -212,7 +213,7 @@ namespace IllusionScript.SDK.Bundler
                 string obj = Objs[name];
                 if (obj.StartsWith('"') && obj.EndsWith('"'))
                 {
-                    return obj.Substring(1, obj.Length - 1);
+                    return obj.Substring(1, obj.Length - 2);
                 }
                 else
                 {
@@ -344,6 +345,21 @@ namespace IllusionScript.SDK.Bundler
             }
 
             return json.Objs.Keys;
+        }
+
+        public static bool KeyExists(Json json, string key)
+        {
+            if (!key.StartsWith('"') && !key.EndsWith('"'))
+            {
+                key = $"\"{key}\"";
+            }
+
+            if (json.IsArray)
+            {
+                throw new Exception("Cannot read keys of array");
+            }
+
+            return json.Objs.ContainsKey(key);
         }
     }
 }

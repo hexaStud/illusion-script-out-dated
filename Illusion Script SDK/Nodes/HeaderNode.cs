@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace IllusionScript.SDK.Nodes
+﻿namespace IllusionScript.SDK.Nodes
 {
 
     public abstract class HeaderNode : Node

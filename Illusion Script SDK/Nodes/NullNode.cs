@@ -1,5 +1,4 @@
-﻿using System;
-using IllusionScript.SDK.Bundler;
+﻿using IllusionScript.SDK.Bundler;
 using IllusionScript.SDK.Values;
 
 namespace IllusionScript.SDK.Nodes

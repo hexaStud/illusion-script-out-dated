@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK.Nodes

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using IllusionScript.SDK.Nodes;
 
 namespace IllusionScript.SDK.Values.Assets
 {

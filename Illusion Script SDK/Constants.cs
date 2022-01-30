@@ -18,19 +18,19 @@ namespace IllusionScript.SDK
 
         public static readonly Dictionary<char, char> ESCAPE_CHARACTERS = BuildEscapeCharacters();
 
-        public static readonly char[] DIGITS = new char[]
+        public static readonly char[] DIGITS =
         {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
         };
 
-        public static readonly char[] LETTERS = new char[]
+        public static readonly char[] LETTERS =
         {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
             'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
         };
 
-        public static readonly char[] LETTERS_DIGITS = new char[]
+        public static readonly char[] LETTERS_DIGITS = 
         {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
@@ -81,6 +81,7 @@ namespace IllusionScript.SDK
             public const string RCURLY_BRACKET = "RCURLY_BRACKET";
 
             public const string COMMA = "COMMA";
+            public const string DOT = "DOT";
             public const string ACCESS_ARROW = "ACCESS_ARROW";
             public const string ARROW = "ARROW";
 
@@ -164,11 +165,14 @@ namespace IllusionScript.SDK
         {
             public const string IMPORT = "@import";
 
-            public const string END = "@el";
+            public const string END = "@end";
 
             public const string IF = "@if";
-            public const string ELSE_IF = "@elseif";
+            public const string ELSE_IF = "@elif";
             public const string ELSE = "@else";
+
+            public const string PACKAGE = "@package";
+            public const string USE = "@use";
 
             public static readonly string[] KEYWORDS = new string[]
             {
@@ -176,7 +180,9 @@ namespace IllusionScript.SDK
                 END,
                 IF,
                 ELSE_IF,
-                ELSE
+                ELSE,
+                PACKAGE,
+                USE
             };
         }
 

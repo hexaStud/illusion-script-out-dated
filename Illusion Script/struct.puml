@@ -6,139 +6,244 @@ class IniFile
 
 ' Illusion Script SDK
 ' SDK
-class Constants
-class Context
-abstract class Error
-class Executor
-class Interpreter
-class Lexer
-abstract class Node
-class Parser
-class ParserResult
-class ParserValue
-class Position
-class RuntimeResult
-class SymbolTable
-class SymbolTableValue
-class Token
-class TokenValue
-abstract class Value
+class SDK.Constants
+class SDK.Context
+abstract class SDK.Error
+class SDK.Executor
+class SDK.Interpreter
+class SDK.Lexer
+abstract class SDK.Node
+class SDK.Parser
+class SDK.ParserResult
+class SDK.ParserValue
+class SDK.Position
+class SDK.RuntimeResult
+class SDK.SymbolTable
+class SDK.SymbolTableValue
+class SDK.Token
+class SDK.TokenValue
+abstract class SDK.Value
+class SDK.MemoryCash
+class SDK.MemoryItem
 
-'SDK.Error
-class ExpectedCharError
-class IllegalCharError
-class InvalidSyntaxError
-class RuntimeError
-class UnexpectedCharError
+' SDK.Error
+class SDK.Error.ExpectedCharError
+class SDK.Error.IllegalCharError
+class SDK.Error.InvalidSyntaxError
+class SDK.Error.RuntimeError
+class SDK.Error.UnexpectedCharError
 
-'SDK.Extensions
-class String
+' SDK.Extensions
+class SDK.Extensions.String
+class SDK.Extensions.Path
 
-'SDK.Nodes
-class BinOpNode
-class BreakNode
-class CallNode
-class ClassConstructNode
-class ClassNode
-class ConstAssignNode
-class ContinueNode
-class ElseCaseNode
-class ExportNode
-class FieldNode
-class ForNode
-class FunctionDefineNode
-abstract class HeaderNode
-class HeadIfNode
-class IfExprBorCNode
-class IfNode
-class ImportNode
-class ListNode
-class MainNode
-class MethodDefineNode
-class NullNode
-class NumberNode
-class ObjectAccessNode
-class ObjectAssignNode
-class ObjectCallNode
-class ObjectNode
-class ReturnNode
-class StringNode
-class UnaryOpNode
-class VarAccessNode
-class VarAssignNode
-class WhileNode
+' SDK.Nodes
+class SDK.Nodes.BinOpNode
+class SDK.Nodes.BreakNode
+class SDK.Nodes.CallNode
+class SDK.Nodes.ClassConstructNode
+class SDK.Nodes.ClassNode
+class SDK.Nodes.ConstAssignNode
+class SDK.Nodes.ContinueNode
+class SDK.Nodes.ElseCaseNode
+class SDK.Nodes.ExportNode
+class SDK.Nodes.FieldNode
+class SDK.Nodes.ForNode
+class SDK.Nodes.FunctionDefineNode
+abstract class SDK.Nodes.HeaderNode
+class SDK.Nodes.HeadIfNode
+class SDK.Nodes.IfExprBorCNode
+class SDK.Nodes.IfNode
+class SDK.Nodes.ImportNode
+class SDK.Nodes.ListNode
+class SDK.Nodes.MainNode
+class SDK.Nodes.MethodDefineNode
+class SDK.Nodes.NullNode
+class SDK.Nodes.NumberNode
+class SDK.Nodes.ObjectAccessNode
+class SDK.Nodes.ObjectAssignNode
+class SDK.Nodes.ObjectCallNode
+class SDK.Nodes.ObjectNode
+class SDK.Nodes.ReturnNode
+class SDK.Nodes.StringNode
+class SDK.Nodes.UnaryOpNode
+class SDK.Nodes.VarAccessNode
+class SDK.Nodes.VarAssignNode
+class SDK.Nodes.WhileNode
+class SDK.Nodes.PackageNode
+class SDK.Nodes.UseNode
 
-Node <|-- BinOpNode
-Node <|-- BreakNode
-Node <|-- CallNode
-Node <|-- ClassConstructNode
-Node <|-- ClassNode
-Node <|-- ConstAssignNode
-Node <|-- ContinueNode
-Node <|-- ElseCaseNode
-Node <|-- ExportNode
-Node <|-- FieldNode
-Node <|-- ForNode
-Node <|-- FunctionDefineNode
-Node <|-- HeaderNode
-Node <|-- IfExprBorCNode
-Node <|-- IfNode
-Node <|-- ListNode
-Node <|-- MainNode
-Node <|-- MethodDefineNode
-Node <|-- NullNode
-Node <|-- NumberNode
-Node <|-- ObjectAccessNode
-Node <|-- ObjectAssignNode
-Node <|-- ObjectCallNode
-Node <|-- ObjectNode
-Node <|-- ReturnNode
-Node <|-- StringNode
-Node <|-- UnaryOpNode
-Node <|-- VarAccessNode
-Node <|-- VarAssignNode
-Node <|-- WhileNode
+' SDK.Nodes.Assets
+class SDK.Nodes.Assets.IfCase
 
-HeaderNode <|-- HeadIfNode
-HeaderNode <|-- ImportNode
+' SDK.Plugin
+class SDK.Plugin.IModule
+class SDK.Plugin.PluginLoader
+
+' SDK.Values
+class SDK.Values.BuiltInFunctionValue
+class SDK.Values.ClassValue
+class SDK.Values.FieldValue
+class SDK.Values.FunctionValue
+class SDK.Values.ListValue
+class SDK.Values.MethodValue
+class SDK.Values.NumberValue
+class SDK.Values.ObjectValue
+class SDK.Values.StringValue
+
+' SDK.Values.Assets
+class SDK.Values.Assets.BaseClassValue
+class SDK.Values.Assets.BaseFunctionValue
+abstract class SDK.Values.Assets.ClassItemValue
+class SDK.Values.Assets.IBuiltInFunction
+
+' SDK.Bundler
+class SDK.Bundler.Json
+class SDK.Bundler.BundleFile
+class SDK.Bundler.Converter
+class SDK.Bundler.HashMap
+
+' Lib.std
+class Lib.std.Count
+class Lib.std.IsFloat
+class Lib.std.IsInt
+class Lib.std.IsList
+class Lib.std.IsObject
+class Lib.std.IsString
+class Lib.std.Main
+class Lib.std.Print
+class Lib.std.PrintLn
+class Lib.std.Read
+class Lib.std.ToString
+
+' Lib os
+class Lib.os.Main
+
+' Lib system
+class Lib.system.Main
+
+SDK.Node <|-- SDK.Nodes.BinOpNode
+SDK.Node <|-- SDK.Nodes.BreakNode
+SDK.Node <|-- SDK.Nodes.CallNode
+SDK.Node <|-- SDK.Nodes.ClassConstructNode
+SDK.Node <|-- SDK.Nodes.ClassNode
+SDK.Node <|-- SDK.Nodes.ConstAssignNode
+SDK.Node <|-- SDK.Nodes.ContinueNode
+SDK.Node <|-- SDK.Nodes.ElseCaseNode
+SDK.Node <|-- SDK.Nodes.ExportNode
+SDK.Node <|-- SDK.Nodes.FieldNode
+SDK.Node <|-- SDK.Nodes.ForNode
+SDK.Node <|-- SDK.Nodes.FunctionDefineNode
+SDK.Node <|-- SDK.Nodes.HeaderNode
+SDK.Node <|-- SDK.Nodes.IfExprBorCNode
+SDK.Node <|-- SDK.Nodes.IfNode
+SDK.Node <|-- SDK.Nodes.ListNode
+SDK.Node <|-- SDK.Nodes.MainNode
+SDK.Node <|-- SDK.Nodes.MethodDefineNode
+SDK.Node <|-- SDK.Nodes.NullNode
+SDK.Node <|-- SDK.Nodes.NumberNode
+SDK.Node <|-- SDK.Nodes.ObjectAccessNode
+SDK.Node <|-- SDK.Nodes.ObjectAssignNode
+SDK.Node <|-- SDK.Nodes.ObjectCallNode
+SDK.Node <|-- SDK.Nodes.ObjectNode
+SDK.Node <|-- SDK.Nodes.ReturnNode
+SDK.Node <|-- SDK.Nodes.StringNode
+SDK.Node <|-- SDK.Nodes.UnaryOpNode
+SDK.Node <|-- SDK.Nodes.VarAccessNode
+SDK.Node <|-- SDK.Nodes.VarAssignNode
+SDK.Node <|-- SDK.Nodes.WhileNode
+
+SDK.Nodes.IfNode <|-- SDK.Nodes.Assets.IfCase
+SDK.Nodes.HeadIfNode <|-- SDK.Nodes.Assets.IfCase
+SDK.Nodes.IfExprBorCNode <|-- SDK.Nodes.Assets.IfCase
+
+SDK.Nodes.HeaderNode <|-- SDK.Nodes.HeadIfNode
+SDK.Nodes.HeaderNode <|-- SDK.Nodes.ImportNode
+SDK.Nodes.HeaderNode <|-- SDK.Nodes.PackageNode
+SDK.Nodes.HeaderNode <|-- SDK.Nodes.UseNode
 
 Program <|-- IniFile
-Program <|-- Lexer
-Program <|-- Constants
-Program <|-- ParserResult
-Program <|-- RuntimeResult
-Program <|-- Parser
-Program <|-- Interpreter
+Program <|-- SDK.Lexer
+Program <|-- SDK.Constants
+Program <|-- SDK.ParserResult
+Program <|-- SDK.RuntimeResult
+Program <|-- SDK.Parser
+Program <|-- SDK.Interpreter
+Program <|-- SDK.Plugin.PluginLoader
 
-Lexer <|-- Token
-Lexer <|-- Position
+SDK.Lexer <|-- SDK.Token
+SDK.Lexer <|-- SDK.Position
 
-Token <|-- TokenValue
-Token <|-- Constants
-Token <|-- Position
+SDK.Token <|-- SDK.TokenValue
+SDK.Token <|-- SDK.Constants
+SDK.Token <|-- SDK.Position
 
-Parser <|-- ParserResult
-Parser <|-- Node
-Parser <|-- Error
+SDK.Parser <|-- SDK.ParserResult
+SDK.Parser <|-- SDK.Node
+SDK.Parser <|-- SDK.Error
 
-ParserResult <|-- ParserValue
-ParserResult <|-- Node
-ParserResult <|-- Error
+SDK.ParserResult <|-- SDK.ParserValue
+SDK.ParserResult <|-- SDK.Node
+SDK.ParserResult <|-- SDK.Error
 
-Interpreter <|-- Position
-Interpreter <|-- Context
-Interpreter <|-- RuntimeResult
-Interpreter <|-- Node
-Interpreter <|-- Value
+SDK.Interpreter <|-- SDK.Position
+SDK.Interpreter <|-- SDK.Context
+SDK.Interpreter <|-- SDK.RuntimeResult
+SDK.Interpreter <|-- SDK.Node
+SDK.Interpreter <|-- SDK.Value
+SDK.Interpreter <|-- SDK.Plugin.PluginLoader
+SDK.Interpreter <|-- SDK.MemoryCash
 
-Context <|-- SymbolTable
+SDK.MemoryCash <|-- SDK.MemoryItem
 
-SymbolTable <|-- SymbolTableValue
+SDK.Context <|-- SDK.SymbolTable
 
-Error <|-- ExpectedCharError
-Error <|-- IllegalCharError
-Error <|-- InvalidSyntaxError
-Error <|-- RuntimeError
-Error <|-- UnexpectedCharError
+SDK.SymbolTable <|-- SDK.SymbolTableValue
+
+SDK.Error <|-- SDK.Error.ExpectedCharError
+SDK.Error <|-- SDK.Error.IllegalCharError
+SDK.Error <|-- SDK.Error.InvalidSyntaxError
+SDK.Error <|-- SDK.Error.RuntimeError
+SDK.Error <|-- SDK.Error.UnexpectedCharError
+
+SDK.Plugin.PluginLoader <|-- SDK.Plugin.IModule
+
+SDK.Values.Assets.BaseClassValue <|-- SDK.Values.ClassValue
+
+SDK.Values.ClassValue <|-- SDK.Values.Assets.ClassItemValue
+
+SDK.Values.Assets.ClassItemValue <|-- SDK.Values.FieldValue
+SDK.Values.Assets.ClassItemValue <|-- SDK.Values.MethodValue
+
+SDK.Values.Assets.BaseFunctionValue <|-- SDK.Values.BuiltInFunctionValue
+SDK.Values.Assets.BaseFunctionValue <|-- SDK.Values.FunctionValue
+
+SDK.Values.BuiltInFunctionValue <|-- SDK.Values.Assets.IBuiltInFunction
+
+SDK.Value <|-- SDK.Values.Assets.BaseClassValue
+SDK.Value <|-- SDK.Values.Assets.BaseFunctionValue
+SDK.Value <|-- SDK.Values.ListValue
+SDK.Value <|-- SDK.Values.NumberValue
+SDK.Value <|-- SDK.Values.ObjectValue
+SDK.Value <|-- SDK.Values.StringValue
+
+SDK.Bundler.Json <|-- SDK.Node
+SDK.Bundler.Converter <|-- SDK.Bundler.BundleFile 
+SDK.Bundler.Converter <|-- SDK.Bundler.HashMap
+
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.Count
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.IsFloat
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.IsInt
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.IsList
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.IsObject
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.IsString
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.Print
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.PrintLn
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.Read
+SDK.Values.Assets.IBuiltInFunction <|-- Lib.std.ToString
+
+SDK.Plugin.IModule <|-- Lib.std.Main
+SDK.Plugin.IModule <|-- Lib.os.Main
+SDK.Plugin.IModule <|-- Lib.system.Main
 
 @enduml

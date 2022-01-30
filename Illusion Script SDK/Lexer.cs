@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IllusionScript.SDK;
 using IllusionScript.SDK.Errors;
 
 namespace IllusionScript.SDK
@@ -126,6 +125,11 @@ namespace IllusionScript.SDK
                 else if (CurrentChar == ',')
                 {
                     tokens.Add(new Token(Constants.TT.COMMA, default, Pos));
+                    Advance();
+                }
+                else if (CurrentChar == '.')
+                {
+                    tokens.Add(new Token(Constants.TT.DOT, default, Pos));
                     Advance();
                 }
                 else if (CurrentChar == '!')

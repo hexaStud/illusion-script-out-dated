@@ -1,5 +1,4 @@
-﻿using System;
-using IllusionScript.SDK.Bundler;
+﻿using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK
 {
@@ -57,8 +56,14 @@ namespace IllusionScript.SDK
 
         public string __bundle__()
         {
+            string value = "";
+            if (Value != default(TokenValue))
+            {
+                value = $"\"value\": {Value.__bundle__()}, ";
+            }
+
             return "{" +
-                   $"\"type\": \"Token\", \"tt\": \"{Type}\", \"value\": {Value.__bundle__()}, \"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
+                   $"\"type\": \"Token\", \"tt\": \"{Type}\", {value}\"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
                    "}";
         }
 
@@ -66,7 +71,7 @@ namespace IllusionScript.SDK
         {
             Token tok = Empty();
             tok.Type = json.GetAsText("tt");
-            tok.Value = TokenValue.Convert(json.Get("value"));
+            tok.Value = Json.KeyExists(json, "value") ? TokenValue.Convert(json.Get("value")) : default;
             tok.StartPos = Position.Convert(json.Get("startPos"));
             tok.EndPos = Position.Convert(json.Get("endPos"));
             return tok;
@@ -74,7 +79,7 @@ namespace IllusionScript.SDK
 
         public static Token Empty()
         {
-            return new Token("", new TokenValue(typeof(string), ""));
+            return new Token("", new TokenValue(typeof(string), ""), Position.Empty(), Position.Empty());
         }
     }
 }

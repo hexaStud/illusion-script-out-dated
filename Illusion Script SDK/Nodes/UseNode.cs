@@ -2,24 +2,19 @@
 
 namespace IllusionScript.SDK.Nodes
 {
-    public class ImportNode : HeaderNode
+    class UseNode : HeaderNode
     {
         public Token Module;
-
-        public ImportNode(Position startPos, Position endPos, Token module) : base(startPos, endPos)
+        
+        public UseNode(Position startPos, Position endPos, Token module) : base(startPos, endPos)
         {
             Module = module;
-        }
-
-        public override string __repr__()
-        {
-            return "";
         }
 
         public override string __bundle__()
         {
             return "{" +
-                   $"\"type\": \"ImportNode\", \"module\": {Module.__bundle__()}, \"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
+                   $"\"type\": \"UseNode\", \"module\": {Module.__bundle__()}, \"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
                    "}";
         }
 

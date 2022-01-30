@@ -35,7 +35,7 @@ namespace IllusionScript.SDK.Errors
                 context = Context.Parent != default(Context) ? context.Parent : default;
             }
 
-            return $"Traceback (most recent call last)\n {result}";
+            return $"Traceback (most recent call last)\n{result}";
         }
 
         public override string ToString()

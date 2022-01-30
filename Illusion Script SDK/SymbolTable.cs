@@ -4,7 +4,7 @@ namespace IllusionScript.SDK
 {
     public class SymbolTable
     {
-        public static readonly SymbolTable GlobalSymbols = new SymbolTable();
+        public static SymbolTable GlobalSymbols = new ();
         private readonly Dictionary<string, SymbolTableValue> Symbols;
         private readonly SymbolTable Parent;
 
@@ -18,7 +18,6 @@ namespace IllusionScript.SDK
             Symbols = new Dictionary<string, SymbolTableValue>();
             Parent = parent;
         }
-
         public SymbolTableValue Get(string name)
         {
             SymbolTableValue value = default;

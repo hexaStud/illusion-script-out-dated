@@ -18,6 +18,7 @@ namespace IllusionScript.Lib.std
 
             // ===== CONSOLE FUNCTIONS ===== //
             table.Set(Print.Name, BuiltInFunctionValue.Define(Print.Name, new Print()));
+            table.Set(PrintLn.Name, BuiltInFunctionValue.Define(PrintLn.Name, new PrintLn()));
             table.Set(Read.Name, BuiltInFunctionValue.Define(Read.Name, new Read()));
 
             // ===== DATATYPE FUNCTIONS ===== //

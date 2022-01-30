@@ -1,5 +1,4 @@
-﻿using IllusionScript.SDK.Nodes;
-using IllusionScript.SDK.Values.Assets;
+﻿using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.SDK.Values
 {

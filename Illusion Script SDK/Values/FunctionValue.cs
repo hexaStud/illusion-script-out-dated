@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.SDK.Values

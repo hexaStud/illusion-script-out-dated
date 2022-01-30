@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace IllusionScript.SDK.Plugin
 {
-    public class PluginLoader
+    public static class PluginLoader
     {
         public static List<string> Assemblies = new List<string>();
         public static List<IModule> Plugins = new List<IModule>();
@@ -30,7 +30,7 @@ namespace IllusionScript.SDK.Plugin
 
             foreach (Type type in types)
             {
-                Plugins.Add((IModule) Activator.CreateInstance(type));
+                Plugins.Add((IModule)Activator.CreateInstance(type));
             }
         }
 
@@ -51,11 +51,12 @@ namespace IllusionScript.SDK.Plugin
         {
             foreach (IModule plugin in Plugins)
             {
-                if (plugin.Name == name)
+                if (plugin.Name != name)
                 {
-                    plugin.Load(symbolTable);
-                    break;
+                    continue;
                 }
+                plugin.Load(symbolTable);
+                break;
             }
         }
     }
