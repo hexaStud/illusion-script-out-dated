@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using IllusionScript.SDK;
+using IllusionScript.SDK.Nodes;
 using IllusionScript.SDK.Plugin;
 using IllusionScript.SDK.Values;
+using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript
 {
@@ -28,11 +30,10 @@ namespace IllusionScript
 
         private static void SetupConfig()
         {
-
             List<string> fileImport = Config.Read("Config", "allowFileImport");
-            Constants.Config.FileImport =  fileImport.Count > 0 && fileImport[0] == "true";
+            Constants.Config.FileImport = fileImport.Count > 0 && fileImport[0] == "true";
             List<string> fileExport = Config.Read("Config", "allowFileExport");
-            Constants.Config.FileExport =  fileExport.Count > 0 && fileExport[0] == "true";
+            Constants.Config.FileExport = fileExport.Count > 0 && fileExport[0] == "true";
         }
 
         public static void Main(string[] args)
@@ -40,7 +41,6 @@ namespace IllusionScript
             Config = new InIFile(Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "ils.ini"));
             LoadExtension();
             SetupConfig();
-
 
             List<string> programArgs = new List<string>();
             List<string> interpreterArgs = new List<string>();
@@ -126,6 +126,16 @@ namespace IllusionScript
             Context context = new Context("<program>");
             context.SymbolTable = SymbolTable.GlobalSymbols;
 
+            Lexer lexer = new Lexer(data, fileName, filepath);
+            Tuple<Error, List<Token>> testRes = lexer.MakeTokens();
+            Parser parser = new Parser(testRes.Item2);
+            ParserResult parserResult = parser.Parse();
+            Converter bundler = new Converter();
+            bundler.Bundle((ListNode)parserResult.Node);
+            bundler.WriteDown(Path.Join(Directory.GetCurrentDirectory(), "test.ila"));
+
+
+            return;
             Tuple<Error, Value, Dictionary<string, Value>> res = Executor.Run(data, fileName, filepath, context,
                 main);
             if (res.Item1 != default(Error))
@@ -138,7 +148,7 @@ namespace IllusionScript
                 {
                     if (res.Item2.GetType() == typeof(ListValue))
                     {
-                        ListValue list = (ListValue) res.Item2;
+                        ListValue list = (ListValue)res.Item2;
 
                         Console.Write(Constants.EOL);
                         if (list.Elements.Count == 1)

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK.Nodes
 {
@@ -14,6 +16,43 @@ namespace IllusionScript.SDK.Nodes
         public override string __repr__()
         {
             return "";
+        }
+
+        public override string __bundle__()
+        {
+            string args = "[";
+            bool first = true;
+            foreach (Token node in Tokens)
+            {
+                if (!first)
+                {
+                    args += ",";
+                }
+
+                args += node.__bundle__();
+                first = false;
+            }
+
+            args += "]";
+
+            return "{" +
+                   $"\"type\": \"ObjectAccessNode\", \"tokens\": {args}, \"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
+                   "}";
+        }
+
+        public override Node __unbundle__(Json json)
+        {
+            Tokens = new List<Token>();
+            Json tokens = json.Get("tokens");
+
+            for (int i = 0; i < Json.Length(tokens); i++)
+            {
+                Tokens.Add(Token.Convert(tokens.Get(i.ToString())));
+            }
+
+            StartPos = Position.Convert(json.Get("startPos"));
+            EndPos = Position.Convert(json.Get("endPos"));
+            return this;
         }
     }
 }

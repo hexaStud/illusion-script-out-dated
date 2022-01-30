@@ -6,6 +6,7 @@ namespace IllusionScript.SDK
     public static class Constants
     {
         public static readonly string EOL = (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) ? "\n\r" : "\n";
+        public static readonly string ESCAPED_EOL = (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) ? "\\n\\r" : "\\n";
         public const string TAB = "    ";
 
         public static readonly char[] IGNORE_CHARACTERS = new char[]

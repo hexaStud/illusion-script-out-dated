@@ -7,19 +7,10 @@
         <AssemblyName>ils</AssemblyName>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\std\std.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        </ProjectReference>
-        <ProjectReference Include="..\os\os.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        </ProjectReference>
-        <ProjectReference Include="..\system\system.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        </ProjectReference>
-    </ItemGroup>
+    <!-- Main exe -->
 
     <ItemGroup>
+        <ProjectReference Include="..\bundler\bundler.csproj" />
         <ProjectReference Include="..\Illusion Script SDK\Illusion Script SDK.csproj" />
     </ItemGroup>
 
@@ -34,6 +25,21 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <!-- Extensions etc -->
+
+    <ItemGroup>
+        <ProjectReference Include="..\std\std.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
+        <ProjectReference Include="..\os\os.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
+        <ProjectReference Include="..\system\system.csproj">
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
+    </ItemGroup>
+
     <Target Name="Libs" AfterTargets="AfterBuild">
         <Message Text="Copy Libaries ..." />
         <Copy SourceFiles="../std/bin/Debug/net5.0/std.dll" DestinationFolder="$(OutDir)/ext/" />
@@ -42,9 +48,10 @@
     </Target>
     <Target Name="Remove" AfterTargets="AfterBuild">
         <Message Text="Deleting unimportant files" />
-<!--                <Delete Files="$(OutDir)ils.sdk.pdb"/>-->
-<!--                <Delete Files="$(OutDir)ils.pdb"/>-->
-<!--                <Delete Files="$(OutDir)ils.runtimeconfig.dev.json"/>-->
-<!--                <Delete Files="$(OutDir)ils.deps.json"/>-->
+        <!--                <Delete Files="$(OutDir)ils.sdk.pdb"/>-->
+        <!--                <Delete Files="$(OutDir)ils.pdb"/>-->
+        <!--                <Delete Files="$(OutDir)bundler.pdb"/>-->
+        <!--                <Delete Files="$(OutDir)ils.runtimeconfig.dev.json"/>-->
+        <!--                <Delete Files="$(OutDir)ils.deps.json"/>-->
     </Target>
 </Project>

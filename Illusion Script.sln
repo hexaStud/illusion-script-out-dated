@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "os", "os\os.csproj", "{AE6D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "system", "system\system.csproj", "{33DBC4C6-C10A-4986-B6CD-6C86A902996B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bundler", "bundler\bundler.csproj", "{F5E31246-1219-412E-9F1F-914F8E6F0AEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{33DBC4C6-C10A-4986-B6CD-6C86A902996B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33DBC4C6-C10A-4986-B6CD-6C86A902996B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33DBC4C6-C10A-4986-B6CD-6C86A902996B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5E31246-1219-412E-9F1F-914F8E6F0AEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5E31246-1219-412E-9F1F-914F8E6F0AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5E31246-1219-412E-9F1F-914F8E6F0AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5E31246-1219-412E-9F1F-914F8E6F0AEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

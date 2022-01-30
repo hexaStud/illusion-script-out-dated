@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using IllusionScript.SDK.Nodes;
-using IllusionScript.SDK.Values;
 
 namespace IllusionScript.SDK
 {

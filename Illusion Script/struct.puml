@@ -1,0 +1,144 @@
+﻿@startuml
+
+' Illusion Script
+class Program
+class IniFile
+
+' Illusion Script SDK
+' SDK
+class Constants
+class Context
+abstract class Error
+class Executor
+class Interpreter
+class Lexer
+abstract class Node
+class Parser
+class ParserResult
+class ParserValue
+class Position
+class RuntimeResult
+class SymbolTable
+class SymbolTableValue
+class Token
+class TokenValue
+abstract class Value
+
+'SDK.Error
+class ExpectedCharError
+class IllegalCharError
+class InvalidSyntaxError
+class RuntimeError
+class UnexpectedCharError
+
+'SDK.Extensions
+class String
+
+'SDK.Nodes
+class BinOpNode
+class BreakNode
+class CallNode
+class ClassConstructNode
+class ClassNode
+class ConstAssignNode
+class ContinueNode
+class ElseCaseNode
+class ExportNode
+class FieldNode
+class ForNode
+class FunctionDefineNode
+abstract class HeaderNode
+class HeadIfNode
+class IfExprBorCNode
+class IfNode
+class ImportNode
+class ListNode
+class MainNode
+class MethodDefineNode
+class NullNode
+class NumberNode
+class ObjectAccessNode
+class ObjectAssignNode
+class ObjectCallNode
+class ObjectNode
+class ReturnNode
+class StringNode
+class UnaryOpNode
+class VarAccessNode
+class VarAssignNode
+class WhileNode
+
+Node <|-- BinOpNode
+Node <|-- BreakNode
+Node <|-- CallNode
+Node <|-- ClassConstructNode
+Node <|-- ClassNode
+Node <|-- ConstAssignNode
+Node <|-- ContinueNode
+Node <|-- ElseCaseNode
+Node <|-- ExportNode
+Node <|-- FieldNode
+Node <|-- ForNode
+Node <|-- FunctionDefineNode
+Node <|-- HeaderNode
+Node <|-- IfExprBorCNode
+Node <|-- IfNode
+Node <|-- ListNode
+Node <|-- MainNode
+Node <|-- MethodDefineNode
+Node <|-- NullNode
+Node <|-- NumberNode
+Node <|-- ObjectAccessNode
+Node <|-- ObjectAssignNode
+Node <|-- ObjectCallNode
+Node <|-- ObjectNode
+Node <|-- ReturnNode
+Node <|-- StringNode
+Node <|-- UnaryOpNode
+Node <|-- VarAccessNode
+Node <|-- VarAssignNode
+Node <|-- WhileNode
+
+HeaderNode <|-- HeadIfNode
+HeaderNode <|-- ImportNode
+
+Program <|-- IniFile
+Program <|-- Lexer
+Program <|-- Constants
+Program <|-- ParserResult
+Program <|-- RuntimeResult
+Program <|-- Parser
+Program <|-- Interpreter
+
+Lexer <|-- Token
+Lexer <|-- Position
+
+Token <|-- TokenValue
+Token <|-- Constants
+Token <|-- Position
+
+Parser <|-- ParserResult
+Parser <|-- Node
+Parser <|-- Error
+
+ParserResult <|-- ParserValue
+ParserResult <|-- Node
+ParserResult <|-- Error
+
+Interpreter <|-- Position
+Interpreter <|-- Context
+Interpreter <|-- RuntimeResult
+Interpreter <|-- Node
+Interpreter <|-- Value
+
+Context <|-- SymbolTable
+
+SymbolTable <|-- SymbolTableValue
+
+Error <|-- ExpectedCharError
+Error <|-- IllegalCharError
+Error <|-- InvalidSyntaxError
+Error <|-- RuntimeError
+Error <|-- UnexpectedCharError
+
+@enduml

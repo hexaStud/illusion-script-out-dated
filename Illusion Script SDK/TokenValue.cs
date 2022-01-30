@@ -1,4 +1,5 @@
 ﻿using System;
+using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK
 {
@@ -51,6 +52,38 @@ namespace IllusionScript.SDK
             }
 
             return value;
+        }
+
+        public string __bundle__()
+        {
+            return "{" + $"\"type\": \"{Type.Name}\", \"value\": \"{Value}\"" + "}";
+        }
+
+        public static TokenValue Convert(Json json)
+        {
+            TokenValue tokenValue = new TokenValue(default, default);
+            Type type;
+            switch (json.GetAsText("type"))
+            {
+                case "String":
+                    type = typeof(string);
+                    break;
+                case "Int32":
+                    type = typeof(int);
+                    break;
+                case "Single":
+                    type = typeof(float);
+                    break;
+                case "Boolean":
+                    type = typeof(bool);
+                    break;
+                default:
+                    throw new Exception($"Undefined type '{json.GetAsText("type")}'");
+            }
+
+            tokenValue.Type = type;
+            tokenValue.Value = json.GetAsText("value");
+            return tokenValue;
         }
     }
 }
