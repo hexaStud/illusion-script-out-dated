@@ -23,11 +23,14 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            var cases = "[";
-            var first = true;
-            foreach (var node in Cases)
+            string cases = "[";
+            bool first = true;
+            foreach (IfCase node in Cases)
             {
-                if (!first) cases += ",";
+                if (!first)
+                {
+                    cases += ",";
+                }
 
                 cases += node.__bundle__();
                 first = false;
@@ -42,10 +45,13 @@ namespace IllusionScript.SDK.Nodes
 
         public override Node __unbundle__(Json json)
         {
-            var cases = json.Get("cases");
+            Json cases = json.Get("cases");
 
             Cases = new List<IfCase>();
-            for (var i = 0; i < Json.Length(cases); i++) Cases.Add(new IfCase().__unbundle__(cases.Get(i.ToString())));
+            for (int i = 0; i < Json.Length(cases); i++)
+            {
+                Cases.Add(new IfCase().__unbundle__(cases.Get(i.ToString())));
+            }
 
             ElseCase = (ElseCaseNode)ConvertNode(json.Get("elseCase"));
 

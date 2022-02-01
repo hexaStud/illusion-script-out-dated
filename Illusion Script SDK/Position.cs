@@ -4,12 +4,12 @@ namespace IllusionScript.SDK
 {
     public class Position
     {
+        public int Idx;
+        public int Ln;
         public int Col;
         public string FileName;
         public string Filepath;
         public string FileText;
-        public int Idx;
-        public int Ln;
 
         public Position(int idx, int ln, int col, string fileName, string filepath, string fileText)
         {
@@ -62,7 +62,7 @@ namespace IllusionScript.SDK
 
         public static Position Convert(Json json)
         {
-            var empty = Empty();
+            Position empty = Empty();
             empty.Idx = json.GetAsInt("idx");
             empty.Ln = json.GetAsInt("ln");
             empty.Col = json.GetAsInt("col");

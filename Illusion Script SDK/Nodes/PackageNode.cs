@@ -3,10 +3,10 @@ using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK.Nodes
 {
-    internal class PackageNode : HeaderNode
+    class PackageNode : HeaderNode
     {
-        public string FileName;
         public List<Token> Names;
+        public string FileName;
 
         public PackageNode(List<Token> names) : base(names[0].StartPos, names[^1].EndPos)
         {
@@ -16,11 +16,14 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            var args = "[";
-            var first = true;
-            foreach (var node in Names)
+            string args = "[";
+            bool first = true;
+            foreach (Token node in Names)
             {
-                if (!first) args += ",";
+                if (!first)
+                {
+                    args += ",";
+                }
 
                 args += node.__bundle__();
                 first = false;
@@ -37,8 +40,11 @@ namespace IllusionScript.SDK.Nodes
         {
             FileName = json.GetAsText("fileName");
             Names = new List<Token>();
-            var args = json.Get("names");
-            for (var i = 0; i < Json.Length(args); i++) Names.Add(Token.Convert(args.Get(i.ToString())));
+            Json args = json.Get("names");
+            for (int i = 0; i < Json.Length(args); i++)
+            {
+                Names.Add(Token.Convert(args.Get(i.ToString())));
+            }
 
             StartPos = Position.Convert(json.Get("startPos"));
             EndPos = Position.Convert(json.Get("endPos"));

@@ -4,10 +4,10 @@ namespace IllusionScript.SDK
 {
     public class Token
     {
-        public Position EndPos;
-        public Position StartPos;
         public string Type;
         public TokenValue Value;
+        public Position StartPos;
+        public Position EndPos;
 
         public Token(string type)
         {
@@ -45,14 +45,22 @@ namespace IllusionScript.SDK
         public string __repr__()
         {
             if (Value == default(TokenValue))
+            {
                 return $"{Type}";
-            return $"{Type}:{Value.Value}";
+            }
+            else
+            {
+                return $"{Type}:{Value.Value}";
+            }
         }
 
         public string __bundle__()
         {
-            var value = "";
-            if (Value != default(TokenValue)) value = $"\"value\": {Value.__bundle__()}, ";
+            string value = "";
+            if (Value != default(TokenValue))
+            {
+                value = $"\"value\": {Value.__bundle__()}, ";
+            }
 
             return "{" +
                    $"\"type\": \"Token\", \"tt\": \"{Type}\", {value}\"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
@@ -61,7 +69,7 @@ namespace IllusionScript.SDK
 
         public static Token Convert(Json json)
         {
-            var tok = Empty();
+            Token tok = Empty();
             tok.Type = json.GetAsText("tt");
             tok.Value = Json.KeyExists(json, "value") ? TokenValue.Convert(json.Get("value")) : default;
             tok.StartPos = Position.Convert(json.Get("startPos"));

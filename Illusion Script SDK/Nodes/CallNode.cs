@@ -5,11 +5,11 @@ namespace IllusionScript.SDK.Nodes
 {
     public class CallNode : Node
     {
-        public List<Node> ArgNode;
         public Node Node;
+        public List<Node> ArgNode;
 
         public CallNode(Node node, List<Node> argNode) : base(node.StartPos,
-            argNode.Count > 0 ? argNode[^1].EndPos : node.EndPos)
+            (argNode.Count > 0) ? argNode[^1].EndPos : node.EndPos)
         {
             Node = node;
             ArgNode = argNode;
@@ -22,11 +22,14 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            var args = "[";
-            var first = true;
-            foreach (var node in ArgNode)
+            string args = "[";
+            bool first = true;
+            foreach (Node node in ArgNode)
             {
-                if (!first) args += ",";
+                if (!first)
+                {
+                    args += ",";
+                }
 
                 args += node.__bundle__();
                 first = false;
@@ -43,9 +46,12 @@ namespace IllusionScript.SDK.Nodes
             Node = ConvertNode(json.Get("node"));
             ArgNode = new List<Node>();
 
-            var args = json.Get("args");
+            Json args = json.Get("args");
 
-            for (var i = 0; i < Json.Length(args); i++) ArgNode.Add(ConvertNode(args.Get(i.ToString())));
+            for (int i = 0; i < Json.Length(args); i++)
+            {
+                ArgNode.Add(ConvertNode(args.Get(i.ToString())));
+            }
 
 
             StartPos = Position.Convert(json.Get("startPos"));

@@ -1,15 +1,16 @@
-﻿using IllusionScript.SDK.Errors;
+﻿using System;
+using IllusionScript.SDK.Errors;
 using IllusionScript.SDK.Nodes;
 
 namespace IllusionScript.SDK
 {
     public class ParserResult
     {
-        public int AdvanceCount;
         public Error Error;
-        public bool IsHeader;
-        public int LastRegisteredAdvanceCount;
         public Node Node;
+        public bool IsHeader;
+        public int AdvanceCount;
+        public int LastRegisteredAdvanceCount;
         public int ToReverseCount;
 
         public ParserResult()
@@ -31,9 +32,13 @@ namespace IllusionScript.SDK
             LastRegisteredAdvanceCount = res.AdvanceCount;
             AdvanceCount += res.AdvanceCount;
             if (res.Error != default(Error))
+            {
                 Error = res.Error;
+            }
             else
+            {
                 CheckHeader(res);
+            }
 
             return res.Node;
         }
@@ -58,7 +63,10 @@ namespace IllusionScript.SDK
 
         public ParserResult Failure(Error err)
         {
-            if (Error == default(Error) || AdvanceCount == 0) Error = err;
+            if (Error == default(Error) || AdvanceCount == 0)
+            {
+                Error = err;
+            }
 
             return this;
         }
@@ -70,10 +78,12 @@ namespace IllusionScript.SDK
 
         private void CheckHeader(Node node)
         {
-            var type = node.GetType();
+            Type type = node.GetType();
             if (type.IsSubclassOf(typeof(HeaderNode)) && !IsHeader)
+            {
                 Error = new InvalidSyntaxError(
                     "Header function and fields can only used on top of the file", node.StartPos, node.EndPos);
+            }
 
             if (!type.IsSubclassOf(typeof(HeaderNode)) &&
                 type != typeof(UnaryOpNode) &&
@@ -83,8 +93,10 @@ namespace IllusionScript.SDK
                 type != typeof(ListNode) &&
                 type != typeof(VarAccessNode) &&
                 IsHeader
-               )
+            )
+            {
                 IsHeader = false;
+            }
         }
     }
 }

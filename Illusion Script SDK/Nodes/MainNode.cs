@@ -2,6 +2,7 @@
 
 namespace IllusionScript.SDK.Nodes
 {
+
     public class MainNode : Node
     {
         public MainNode() : base(Position.Empty(), Position.Empty())

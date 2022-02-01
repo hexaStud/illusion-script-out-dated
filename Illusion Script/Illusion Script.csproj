@@ -10,7 +10,7 @@
     <!-- Main -->
 
     <ItemGroup>
-        <ProjectReference Include="..\Illusion Script SDK\Illusion Script SDK.csproj"/>
+        <ProjectReference Include="..\Illusion Script SDK\Illusion Script SDK.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,7 +22,7 @@
     <!-- Schemas -->
 
     <Target Name="Schema" AfterTargets="AfterBuild">
-        <Copy SourceFiles="ila.xsd" DestinationFolder="$(OutDir)/schemas/"/>
+        <Copy SourceFiles="ila.xsd" DestinationFolder="$(OutDir)/schemas/" />
     </Target>
 
     <!-- Extensions -->
@@ -40,10 +40,10 @@
     </ItemGroup>
 
     <Target Name="Libs" AfterTargets="AfterBuild">
-        <Message Text="Copy Libaries ..."/>
-        <Copy SourceFiles="../std/bin/Debug/net5.0/std.dll" DestinationFolder="$(OutDir)/ext/"/>
-        <Copy SourceFiles="../os/bin/Debug/net5.0/os.dll" DestinationFolder="$(OutDir)/ext/"/>
-        <Copy SourceFiles="../system/bin/Debug/net5.0/system.dll" DestinationFolder="$(OutDir)/ext/"/>
+        <Message Text="Copy Libaries ..." />
+        <Copy SourceFiles="../std/bin/Debug/net5.0/std.dll" DestinationFolder="$(OutDir)/ext/" />
+        <Copy SourceFiles="../os/bin/Debug/net5.0/os.dll" DestinationFolder="$(OutDir)/ext/" />
+        <Copy SourceFiles="../system/bin/Debug/net5.0/system.dll" DestinationFolder="$(OutDir)/ext/" />
     </Target>
 
     <!-- Clean up -->

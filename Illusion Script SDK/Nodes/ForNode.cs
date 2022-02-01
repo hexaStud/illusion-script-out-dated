@@ -4,12 +4,12 @@ namespace IllusionScript.SDK.Nodes
 {
     public class ForNode : Node
     {
-        public Node Body;
-        public Node EndValue;
-        public bool ShouldReturnNull;
-        public Node StartValue;
-        public Node StepValue;
         public Token VarName;
+        public Node StartValue;
+        public Node EndValue;
+        public Node StepValue;
+        public Node Body;
+        public bool ShouldReturnNull;
 
         public ForNode(Token varName, Node startValue, Node endValue, Node stepValue, Node body,
             bool shouldReturnNull) : base(varName.StartPos, body.EndPos)

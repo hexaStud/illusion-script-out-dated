@@ -19,12 +19,15 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            var first = true;
-            var elements = "[";
+            bool first = true;
+            string elements = "[";
 
-            foreach (var elementsKey in Elements.Keys)
+            foreach (Token elementsKey in Elements.Keys)
             {
-                if (!first) elements += ",";
+                if (!first)
+                {
+                    elements += ",";
+                }
 
                 elements += "{" +
                             $"\"key\", {elementsKey.__bundle__()}, \"value\": {Elements[elementsKey].__bundle__()}" +
@@ -41,10 +44,12 @@ namespace IllusionScript.SDK.Nodes
         public override Node __unbundle__(Json json)
         {
             Elements = new Dictionary<Token, Node>();
-            var elements = json.Get("elements");
-            for (var i = 0; i < Json.Length(elements); i++)
+            Json elements = json.Get("elements");
+            for (int i = 0; i < Json.Length(elements); i++)
+            {
                 Elements[Token.Convert(elements.Get(i.ToString()).Get("key"))] =
                     ConvertNode(elements.Get(i.ToString()).Get("value"));
+            }
 
             StartPos = Position.Convert(json.Get("startPos"));
             EndPos = Position.Convert(json.Get("endPos"));

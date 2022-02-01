@@ -5,13 +5,11 @@ namespace IllusionScript.SDK
 {
     public static class Constants
     {
+        public static readonly string EOL = (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) ? "\n\r" : "\n";
+        public static readonly string ESCAPED_EOL = (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) ? "\\n\\r" : "\\n";
         public const string TAB = "    ";
-        public static readonly string EOL = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "\n\r" : "\n";
 
-        public static readonly string ESCAPED_EOL =
-            RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "\\n\\r" : "\\n";
-
-        public static readonly char[] IGNORE_CHARACTERS =
+        public static readonly char[] IGNORE_CHARACTERS = new char[]
         {
             ' ',
             '\t',
@@ -32,7 +30,7 @@ namespace IllusionScript.SDK
             'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
         };
 
-        public static readonly char[] LETTERS_DIGITS =
+        public static readonly char[] LETTERS_DIGITS = 
         {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
@@ -42,7 +40,7 @@ namespace IllusionScript.SDK
 
         public static Dictionary<char, char> BuildEscapeCharacters()
         {
-            var list = new Dictionary<char, char>();
+            Dictionary<char, char> list = new Dictionary<char, char>();
             list['n'] = '\n';
             list['t'] = '\t';
             list['r'] = '\r';
@@ -131,7 +129,7 @@ namespace IllusionScript.SDK
 
             public const string EXPORT = "export";
 
-            public static readonly string[] KEYWORDS =
+            public static readonly string[] KEYWORDS = new string[]
             {
                 VAR,
                 CONST,
@@ -176,7 +174,7 @@ namespace IllusionScript.SDK
             public const string PACKAGE = "@package";
             public const string USE = "@use";
 
-            public static readonly string[] KEYWORDS =
+            public static readonly string[] KEYWORDS = new string[]
             {
                 IMPORT,
                 END,

@@ -6,7 +6,8 @@ namespace IllusionScript.SDK.Values
 {
     public class BuiltInFunctionValue : BaseFunctionValue
     {
-        private static readonly Dictionary<string, IBuiltInFunction> BaseInFunctions = new();
+        private static readonly Dictionary<string, IBuiltInFunction> BaseInFunctions =
+            new Dictionary<string, IBuiltInFunction>();
 
         private BuiltInFunctionValue(string name) : base(name)
         {
@@ -14,17 +15,26 @@ namespace IllusionScript.SDK.Values
 
         public override RuntimeResult Execute(List<Value> args, Value self = default)
         {
-            var res = new RuntimeResult();
-            var context = GenerateNewContext();
+            RuntimeResult res = new RuntimeResult();
+            Context context = GenerateNewContext();
 
-            if (!BaseInFunctions.ContainsKey(Name)) throw NoVisitMethod(Name);
+            if (!BaseInFunctions.ContainsKey(Name))
+            {
+                throw NoVisitMethod(Name);
+            }
 
-            var func = BaseInFunctions[Name];
+            IBuiltInFunction func = BaseInFunctions[Name];
             res.Register(CheckAndPopulate(func.Args, args, context));
-            if (res.ShouldReturn()) return res;
+            if (res.ShouldReturn())
+            {
+                return res;
+            }
 
-            var returnValue = res.Register(func.Exec(context, this));
-            if (res.ShouldReturn()) return res;
+            Value returnValue = res.Register(func.Exec(context, this));
+            if (res.ShouldReturn())
+            {
+                return res;
+            }
 
             return res.Success(returnValue);
         }
@@ -36,7 +46,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            var copy = new BuiltInFunctionValue(Name);
+            BuiltInFunctionValue copy = new BuiltInFunctionValue(Name);
             copy.SetContext(Context);
             copy.SetPosition(StartPos, EndPos);
             return copy;

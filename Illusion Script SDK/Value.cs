@@ -6,9 +6,9 @@ namespace IllusionScript.SDK
 {
     public class Value
     {
-        protected Context Context;
-        public Position EndPos;
         public Position StartPos;
+        public Position EndPos;
+        protected Context Context;
 
         public Value SetPosition(Position startPos, Position endPos)
         {

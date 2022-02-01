@@ -6,19 +6,28 @@ namespace IllusionScript.SDK.Extensions
     {
         public static string Join(params string[] args)
         {
-            var parts = new List<string>();
-            foreach (var arg in args) parts.AddRange(arg.Replace("/", "\\").Split("\\"));
-
-            var path = new List<string>();
-
-            for (var i = 0; i < parts.Count; i++)
+            List<string> parts = new List<string>();
+            foreach (string arg in args)
             {
-                var part = parts[i];
-                if (part == "") continue;
+                parts.AddRange(arg.Replace("/", "\\").Split("\\"));
+            }
+
+            List<string> path = new List<string>();
+
+            for (int i = 0; i < parts.Count; i++)
+            {
+                string part = parts[i];
+                if (part == "")
+                {
+                    continue;
+                }
 
                 if (part == "..")
                 {
-                    if (path.Count != 0) path.RemoveAt(path.Count - 1);
+                    if (path.Count != 0)
+                    {
+                        path.RemoveAt(path.Count -1);
+                    }
                 }
                 else if (part != ".")
                 {
@@ -26,11 +35,14 @@ namespace IllusionScript.SDK.Extensions
                 }
             }
 
-            var str = "";
-            for (var i = 0; i < path.Count; i++)
+            string str = "";
+            for (int i = 0; i < path.Count; i++)
             {
                 str += path[i];
-                if (i < path.Count - 1) str += "\\";
+                if (i < path.Count - 1)
+                {
+                    str += "\\";
+                }
             }
 
             return str;

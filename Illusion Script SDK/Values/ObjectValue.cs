@@ -14,7 +14,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            var copy = new ObjectValue(Elements);
+            ObjectValue copy = new ObjectValue(Elements);
             copy.SetContext(Context);
             copy.SetPosition(StartPos, EndPos);
             return copy;
@@ -27,12 +27,15 @@ namespace IllusionScript.SDK.Values
 
         private string Join(int stage)
         {
-            var str = "\n" + Constants.TAB.Repeat(stage);
-            var first = true;
+            string str = "\n" + Constants.TAB.Repeat(stage);
+            bool first = true;
 
-            foreach (var keyValuePair in Elements)
+            foreach (KeyValuePair<string, Value> keyValuePair in Elements)
             {
-                if (!first) str += ",\n" + Constants.TAB.Repeat(stage);
+                if (!first)
+                {
+                    str += ",\n" + Constants.TAB.Repeat(stage);
+                }
 
                 str += keyValuePair.Key + " = " + keyValuePair.Value.__repr__(stage + 1);
 

@@ -27,7 +27,7 @@ namespace IllusionScript.Lib.std
             table.Set(IsString.Name, BuiltInFunctionValue.Define(IsString.Name, new IsString()));
             table.Set(IsList.Name, BuiltInFunctionValue.Define(IsList.Name, new IsList()));
             table.Set(IsObject.Name, BuiltInFunctionValue.Define(IsObject.Name, new IsObject()));
-            table.Set(std.ToString.Name, BuiltInFunctionValue.Define(std.ToString.Name, new ToString()));
+            table.Set(std.ToString.Name, BuiltInFunctionValue.Define(std.ToString.Name, new std.ToString()));
 
             // ===== UTILS FUNCTIONS ===== //
             table.Set(Count.Name, BuiltInFunctionValue.Define(Count.Name, new Count()));

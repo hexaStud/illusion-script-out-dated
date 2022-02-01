@@ -10,17 +10,17 @@ namespace IllusionScript.Lib.std
     {
         public static string Name = "print";
 
-        public List<string> Args { get; } = new()
+        public List<string> Args { get; } = new List<string>()
         {
             "x"
         };
 
         public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
         {
-            var value = context.SymbolTable.Get("x").Value;
+            Value value = context.SymbolTable.Get("x").Value;
             if (value.GetType() == typeof(StringValue))
             {
-                var str = (StringValue)value;
+                StringValue str = (StringValue) value;
                 Console.Write(str.ToString());
             }
             else

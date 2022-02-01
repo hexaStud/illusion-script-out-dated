@@ -9,15 +9,15 @@ namespace IllusionScript.Lib.std
     public class PrintLn : IBuiltInFunction
     {
         public static string Name = "println";
-        public List<string> Args { get; } = new() { "x" };
+        public List<string> Args { get; } = new List<string>() { "x" };
 
         public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
         {
-            var x = context.SymbolTable.Get("x").Value;
+            Value x = context.SymbolTable.Get("x").Value;
 
             if (x.GetType() == typeof(StringValue))
             {
-                var str = (StringValue)x;
+                StringValue str = (StringValue)x;
                 Console.Write(str.ToString());
             }
             else

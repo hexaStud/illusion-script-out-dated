@@ -4,9 +4,9 @@ namespace IllusionScript.SDK
 {
     public class SymbolTable
     {
-        public static SymbolTable GlobalSymbols = new();
-        private readonly SymbolTable Parent;
+        public static SymbolTable GlobalSymbols = new ();
         private readonly Dictionary<string, SymbolTableValue> Symbols;
+        private readonly SymbolTable Parent;
 
         public SymbolTable()
         {
@@ -18,20 +18,24 @@ namespace IllusionScript.SDK
             Symbols = new Dictionary<string, SymbolTableValue>();
             Parent = parent;
         }
-
         public SymbolTableValue Get(string name)
         {
             SymbolTableValue value = default;
             if (Symbols.ContainsKey(name))
+            {
                 value = Symbols[name];
-            else if (Parent != default(SymbolTable)) value = Parent.Get(name);
+            }
+            else if (Parent != default(SymbolTable))
+            {
+                value = Parent.Get(name);
+            }
 
             return value;
         }
 
         public void Set(string name, Value value, bool constants = false)
         {
-            Symbols[name] = new SymbolTableValue
+            Symbols[name] = new SymbolTableValue()
             {
                 Constants = constants,
                 Value = value
@@ -41,13 +45,17 @@ namespace IllusionScript.SDK
         public void Update(string name, Value value, bool constants = false)
         {
             if (HasInCurrent(name))
-                Symbols[name] = new SymbolTableValue
+            {
+                Symbols[name] = new SymbolTableValue()
                 {
                     Value = value,
                     Constants = constants
                 };
+            }
             else
+            {
                 Parent.Update(name, value, constants);
+            }
         }
 
         public bool HasInCurrent(string name)
@@ -57,10 +65,15 @@ namespace IllusionScript.SDK
 
         public bool HasInAll(string name)
         {
-            var value = false;
+            bool value = false;
             if (Symbols.ContainsKey(name))
+            {
                 value = true;
-            else if (Parent != default(SymbolTable)) value = Parent.HasInAll(name);
+            }
+            else if (Parent != default(SymbolTable))
+            {
+                value = Parent.HasInAll(name);
+            }
 
             return value;
         }
@@ -69,7 +82,7 @@ namespace IllusionScript.SDK
         {
             if (HasInCurrent(name))
             {
-                var value = Get(name);
+                SymbolTableValue value = Get(name);
                 return value.Constants;
             }
 
@@ -78,7 +91,10 @@ namespace IllusionScript.SDK
 
         public void Remove(string name)
         {
-            if (HasInCurrent(name)) Symbols.Remove(name);
+            if (HasInCurrent(name))
+            {
+                Symbols.Remove(name);
+            }
         }
 
         public Dictionary<string, SymbolTableValue>.KeyCollection GetKeys()

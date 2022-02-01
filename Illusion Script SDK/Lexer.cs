@@ -7,9 +7,9 @@ namespace IllusionScript.SDK
 {
     public class Lexer
     {
+        private string Text;
+        private Position Pos;
         private char CurrentChar;
-        private readonly Position Pos;
-        private readonly string Text;
 
         public Lexer(string text, string fileName, string filepath)
         {
@@ -22,16 +22,21 @@ namespace IllusionScript.SDK
         {
             Pos.Advance(CurrentChar);
             if (Pos.Idx < Text.Length)
+            {
                 CurrentChar = Text[Pos.Idx];
+            }
             else
+            {
                 CurrentChar = default;
+            }
         }
 
         public Tuple<Error, List<Token>> MakeTokens()
         {
-            var tokens = new List<Token>();
+            List<Token> tokens = new List<Token>();
 
             while (CurrentChar != default(char))
+            {
                 if (Constants.IGNORE_CHARACTERS.Contains(CurrentChar))
                 {
                     Advance();
@@ -129,8 +134,11 @@ namespace IllusionScript.SDK
                 }
                 else if (CurrentChar == '!')
                 {
-                    var res = MakeNotEquals();
-                    if (res.Item1 == default(Error)) return new Tuple<Error, List<Token>>(res.Item1, default);
+                    Tuple<Error, Token> res = MakeNotEquals();
+                    if (res.Item1 == default(Error))
+                    {
+                        return new Tuple<Error, List<Token>>(res.Item1, default);
+                    }
 
                     tokens.Add(res.Item2);
                 }
@@ -148,18 +156,24 @@ namespace IllusionScript.SDK
                 }
                 else if (CurrentChar == '@')
                 {
-                    var res = MakeHeader();
+                    Tuple<Error, Token> res = MakeHeader();
                     if (res.Item1 != default(Error))
+                    {
                         return new Tuple<Error, List<Token>>(res.Item1, default);
-                    tokens.Add(res.Item2);
+                    }
+                    else
+                    {
+                        tokens.Add(res.Item2);
+                    }
                 }
                 else
                 {
-                    var startPos = Pos.Copy();
-                    var c = CurrentChar;
+                    Position startPos = Pos.Copy();
+                    char c = CurrentChar;
                     Advance();
                     return new Tuple<Error, List<Token>>(new IllegalCharError($"'{c}'", startPos, Pos), default);
                 }
+            }
 
             tokens.Add(new Token(Constants.TT.EOF, default, Pos));
             return new Tuple<Error, List<Token>>(default, tokens);
@@ -167,15 +181,18 @@ namespace IllusionScript.SDK
 
         private Token MakeNumber()
         {
-            var numStr = "";
-            var dotCount = 0;
-            var startPos = Pos.Copy();
+            string numStr = "";
+            int dotCount = 0;
+            Position startPos = Pos.Copy();
 
             while (CurrentChar != default(char) && Constants.DIGITS.Contains(CurrentChar) || CurrentChar == '.')
             {
                 if (CurrentChar == '.')
                 {
-                    if (dotCount == 1) break;
+                    if (dotCount == 1)
+                    {
+                        break;
+                    }
 
                     dotCount++;
                     numStr += CurrentChar;
@@ -189,14 +206,19 @@ namespace IllusionScript.SDK
             }
 
             if (dotCount == 0)
+            {
                 return new Token(Constants.TT.INT, new TokenValue(typeof(int), numStr), startPos, Pos);
-            return new Token(Constants.TT.FLOAT, new TokenValue(typeof(float), numStr), startPos, Pos);
+            }
+            else
+            {
+                return new Token(Constants.TT.FLOAT, new TokenValue(typeof(float), numStr), startPos, Pos);
+            }
         }
 
         private Token MakeIdentifier()
         {
-            var idStr = "";
-            var startPos = Pos.Copy();
+            string idStr = "";
+            Position startPos = Pos.Copy();
 
             while (CurrentChar != default(char) && Constants.LETTERS_DIGITS.Contains(CurrentChar) || CurrentChar == '_')
             {
@@ -204,7 +226,7 @@ namespace IllusionScript.SDK
                 Advance();
             }
 
-            var tokenType = Constants.Keyword.KEYWORDS.Contains(idStr)
+            string tokenType = (Constants.Keyword.KEYWORDS.Contains(idStr))
                 ? Constants.TT.KEYWORD
                 : Constants.TT.IDENTIFIER;
 
@@ -213,8 +235,8 @@ namespace IllusionScript.SDK
 
         private Tuple<Error, Token> MakeHeader()
         {
-            var idStr = "";
-            var startPos = Pos.Copy();
+            string idStr = "";
+            Position startPos = Pos.Copy();
 
             while (CurrentChar != default(char) && Constants.LETTERS_DIGITS.Contains(CurrentChar) ||
                    CurrentChar is '_' or '@')
@@ -224,14 +246,19 @@ namespace IllusionScript.SDK
             }
 
             if (Constants.HeadKeyword.KEYWORDS.Contains(idStr))
+            {
                 return new Tuple<Error, Token>(default,
                     new Token(Constants.TT.HEAD_KEYWORD, new TokenValue(typeof(string), idStr), startPos, Pos));
-            return new Tuple<Error, Token>(new UnexpectedCharError("Unexpected char '@'", startPos, Pos), default);
+            }
+            else
+            {
+                return new Tuple<Error, Token>(new UnexpectedCharError("Unexpected char '@'", startPos, Pos), default);
+            }
         }
 
         private Tuple<Error, Token> MakeNotEquals()
         {
-            var startPos = Pos.Copy();
+            Position startPos = Pos.Copy();
             Advance();
 
             if (CurrentChar == '=')
@@ -245,8 +272,8 @@ namespace IllusionScript.SDK
 
         private Token MakeEquals()
         {
-            var startPos = Pos.Copy();
-            var tokenType = Constants.TT.EQUALS;
+            Position startPos = Pos.Copy();
+            string tokenType = Constants.TT.EQUALS;
             Advance();
 
             if (CurrentChar == '=')
@@ -265,8 +292,8 @@ namespace IllusionScript.SDK
 
         private Token MakeLessThan()
         {
-            var startPos = Pos.Copy();
-            var tokenType = Constants.TT.LESS_THAN;
+            Position startPos = Pos.Copy();
+            string tokenType = Constants.TT.LESS_THAN;
             Advance();
 
             if (CurrentChar == '=')
@@ -280,8 +307,8 @@ namespace IllusionScript.SDK
 
         private Token MakeGreaterThan()
         {
-            var startPos = Pos.Copy();
-            var tokenType = Constants.TT.GREATER_THAN;
+            Position startPos = Pos.Copy();
+            string tokenType = Constants.TT.GREATER_THAN;
             Advance();
 
             if (CurrentChar == '=')
@@ -300,9 +327,9 @@ namespace IllusionScript.SDK
 
         private Token MakeString()
         {
-            var startPos = Pos.Copy();
-            var str = "";
-            var escapeChar = false;
+            Position startPos = Pos.Copy();
+            string str = "";
+            bool escapeChar = false;
             Advance();
 
             while (CurrentChar != default(char) && (CurrentChar != '"' || escapeChar))
@@ -310,16 +337,24 @@ namespace IllusionScript.SDK
                 if (escapeChar)
                 {
                     if (Constants.ESCAPE_CHARACTERS.ContainsKey(CurrentChar))
+                    {
                         str += Constants.ESCAPE_CHARACTERS.GetValueOrDefault(CurrentChar, CurrentChar);
+                    }
                     else
+                    {
                         str += CurrentChar;
+                    }
                 }
                 else
                 {
                     if (CurrentChar == '\\')
+                    {
                         escapeChar = true;
+                    }
                     else
+                    {
                         str += CurrentChar;
+                    }
                 }
 
                 Advance();
@@ -334,7 +369,10 @@ namespace IllusionScript.SDK
         {
             Advance();
 
-            while (CurrentChar != '\n') Advance();
+            while (CurrentChar != '\n')
+            {
+                Advance();
+            }
 
             Advance();
         }

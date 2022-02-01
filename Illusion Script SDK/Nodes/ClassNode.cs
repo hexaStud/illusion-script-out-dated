@@ -5,10 +5,10 @@ namespace IllusionScript.SDK.Nodes
 {
     public class ClassNode : Node
     {
-        public Token Extends;
-        public List<Node> Fields;
         public Token Name;
+        public List<Node> Fields;
         public List<Node> StaticFields;
+        public Token Extends;
 
         public ClassNode(Token name, List<Node> fields, List<Node> staticFields, Token extends) : base(name.StartPos,
             fields.Count == 0 ? name.EndPos : fields[^1].EndPos)
@@ -26,11 +26,14 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            var fields = "[";
-            var first = true;
-            foreach (var node in Fields)
+            string fields = "[";
+            bool first = true;
+            foreach (Node node in Fields)
             {
-                if (!first) fields += ",";
+                if (!first)
+                {
+                    fields += ",";
+                }
 
                 fields += node.__bundle__();
                 first = false;
@@ -38,11 +41,14 @@ namespace IllusionScript.SDK.Nodes
 
             fields += "]";
 
-            var staticFields = "[";
+            string staticFields = "[";
             first = true;
-            foreach (var node in StaticFields)
+            foreach (Node node in StaticFields)
             {
-                if (!first) staticFields += ",";
+                if (!first)
+                {
+                    staticFields += ",";
+                }
 
                 staticFields += node.__bundle__();
                 first = false;
@@ -50,7 +56,7 @@ namespace IllusionScript.SDK.Nodes
 
             staticFields += "]";
 
-            var extends = Extends == default(Token) ? "false" : Extends.__bundle__();
+            string extends = Extends == default(Token) ? "false" : Extends.__bundle__();
 
             return "{" +
                    $"\"type\": \"ClassNode\", \"name\": {Name.__bundle__()}, \"fields\": {fields}, \"staticFields\": {staticFields}, \"extends\": {extends}, \"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
@@ -62,13 +68,19 @@ namespace IllusionScript.SDK.Nodes
             Name = Token.Convert(json.Get("name"));
             Fields = new List<Node>();
 
-            var fields = json.Get("fields");
-            for (var i = 0; i < Json.Length(fields); i++) Fields.Add(ConvertNode(fields.Get(i.ToString())));
-
+            Json fields = json.Get("fields");
+            for (int i = 0; i < Json.Length(fields); i++)
+            {
+                Fields.Add(ConvertNode(fields.Get(i.ToString())));
+            }
+            
             StaticFields = new List<Node>();
 
-            var staticFields = json.Get("fields");
-            for (var i = 0; i < Json.Length(staticFields); i++) Fields.Add(ConvertNode(staticFields.Get(i.ToString())));
+            Json staticFields = json.Get("fields");
+            for (int i = 0; i < Json.Length(staticFields); i++)
+            {
+                Fields.Add(ConvertNode(staticFields.Get(i.ToString())));
+            }
 
             StartPos = Position.Convert(json.Get("startPos"));
             EndPos = Position.Convert(json.Get("endPos"));

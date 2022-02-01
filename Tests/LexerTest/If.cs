@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using IllusionScript.SDK;
 using NUnit.Framework;
@@ -10,13 +11,14 @@ namespace IllusionScript.Tests.LexerTest
         [SetUp]
         public void Setup()
         {
+            
         }
 
         [Test]
         public void IfTest()
         {
-            var lexer = new Lexer("if 5 == 2 then; 5; end;", "<test>", Directory.GetCurrentDirectory());
-            var lexerResult = lexer.MakeTokens();
+            Lexer lexer = new Lexer("if 5 == 2 then; 5; end;", "<test>", Directory.GetCurrentDirectory());
+            Tuple<Error, List<Token>> lexerResult = lexer.MakeTokens();
             if (lexerResult.Item1 != default(Error))
             {
                 Console.WriteLine(lexerResult.Item1.ToString());
@@ -24,10 +26,13 @@ namespace IllusionScript.Tests.LexerTest
                 return;
             }
 
-            var tokens = lexerResult.Item2;
-
-            foreach (var token in tokens) Console.WriteLine(token.__repr__());
-
+            List<Token> tokens = lexerResult.Item2;
+            
+            foreach (Token token in tokens)
+            {
+                Console.WriteLine(token.__repr__());
+            }
+            
             if (tokens[0].Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), "if")) &&
                 tokens[1].Matches(Constants.TT.INT, new TokenValue(typeof(int), "5")) &&
                 tokens[2].Type == Constants.TT.DOUBLE_EQUALS &&
@@ -40,9 +45,11 @@ namespace IllusionScript.Tests.LexerTest
                 tokens[9].Type == Constants.TT.NEWLINE &&
                 tokens[10].Type == Constants.TT.EOF
                )
+            {
                 return;
+            }
 
             Assert.Fail();
-        }
+        } 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using IllusionScript.SDK.Extensions;
 
+
 namespace IllusionScript.SDK.Values
 {
     public class StringValue : Value
@@ -16,7 +17,7 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(StringValue))
             {
-                var otherString = (StringValue)other;
+                StringValue otherString = (StringValue) other;
 
                 return new Tuple<Error, Value>(default,
                     new StringValue(new TokenValue(typeof(string), Value.Value + otherString.Value.Value))
@@ -30,7 +31,7 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var numberValue = (NumberValue)other;
+                NumberValue numberValue = (NumberValue) other;
                 return new Tuple<Error, Value>(default,
                     new StringValue(new TokenValue(typeof(string), Value.Value.Repeat(numberValue.Value.GetAsInt())))
                         .SetContext(Context));
@@ -43,7 +44,7 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(StringValue))
             {
-                var stringValue = (StringValue)other;
+                StringValue stringValue = (StringValue) other;
                 return new Tuple<Error, Value>(default,
                     Value.Value == stringValue.Value.Value
                         ? NumberValue.True.Copy().SetContext(Context)
@@ -57,7 +58,7 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(StringValue))
             {
-                var stringValue = (StringValue)other;
+                StringValue stringValue = (StringValue) other;
                 return new Tuple<Error, Value>(default,
                     Value.Value != stringValue.Value.Value
                         ? NumberValue.True.Copy().SetContext(Context)
@@ -69,7 +70,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            var copy = new StringValue(Value);
+            StringValue copy = new StringValue(Value);
             return copy.SetContext(Context).SetPosition(StartPos, EndPos);
         }
 

@@ -8,18 +8,23 @@ namespace IllusionScript.Lib.std
     public class ToString : IBuiltInFunction
     {
         public static string Name = "toString";
-
-        public List<string> Args { get; } = new()
+        
+        public List<string> Args { get; } = new List<string>()
         {
             "ele"
         };
 
         public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
         {
-            var ele = context.SymbolTable.Get("ele").Value;
+            Value ele = context.SymbolTable.Get("ele").Value;
             if (ele.GetType() == typeof(StringValue))
+            {
                 return new RuntimeResult().Success(ele);
-            return new RuntimeResult().Success(new StringValue(new TokenValue(typeof(string), ele.__repr__(0))));
+            }
+            else
+            {
+                return new RuntimeResult().Success(new StringValue(new TokenValue(typeof(string), ele.__repr__(0))));
+            }
         }
     }
 }

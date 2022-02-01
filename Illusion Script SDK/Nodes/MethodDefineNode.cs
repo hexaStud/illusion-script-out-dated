@@ -5,15 +5,15 @@ namespace IllusionScript.SDK.Nodes
 {
     public class MethodDefineNode : Node
     {
+        public Token ContextIsolation;
+        public Token VarName;
         public List<Token> ArgName;
         public Node Body;
-        public Token ContextIsolation;
         public bool ShouldAutoReturn;
-        public Token VarName;
 
         public MethodDefineNode(Token contextIsolation, Token varName, List<Token> argName, Node body,
             bool shouldAutoReturn) : base(
-            varName != default(Token) ? varName.StartPos : argName.Count > 0 ? argName[0].StartPos : body.StartPos,
+            varName != default(Token) ? varName.StartPos : (argName.Count > 0) ? argName[0].StartPos : body.StartPos,
             body.EndPos)
         {
             ContextIsolation = contextIsolation;
@@ -30,11 +30,14 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            var args = "[";
-            var first = true;
-            foreach (var node in ArgName)
+            string args = "[";
+            bool first = true;
+            foreach (Token node in ArgName)
             {
-                if (!first) args += ",";
+                if (!first)
+                {
+                    args += ",";
+                }
 
                 args += node.__bundle__();
                 first = false;
@@ -53,9 +56,12 @@ namespace IllusionScript.SDK.Nodes
             VarName = Token.Convert(json.Get("varName"));
             ArgName = new List<Token>();
 
-            var args = json.Get("argName");
-            for (var i = 0; i < Json.Length(args); i++) ArgName.Add(Token.Convert(args.Get(i.ToString())));
-
+            Json args = json.Get("argName");
+            for (int i = 0; i < Json.Length(args); i++)
+            {
+                ArgName.Add(Token.Convert(args.Get(i.ToString())));
+            }
+            
             Body = ConvertNode(json.Get("body"));
             ShouldAutoReturn = json.GetAsBool("shouldAutoReturn");
 

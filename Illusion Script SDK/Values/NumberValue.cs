@@ -5,9 +5,6 @@ namespace IllusionScript.SDK.Values
 {
     public class NumberValue : Value
     {
-        public static readonly NumberValue True = new(new TokenValue(typeof(int), "1"));
-        public static readonly NumberValue False = new(new TokenValue(typeof(int), "0"));
-        public static NumberValue Null = new(new TokenValue(typeof(int), "0"));
         public TokenValue Value;
 
         public NumberValue(TokenValue value)
@@ -19,18 +16,22 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
+                NumberValue otherNumber = (NumberValue) other;
                 var otherNum = otherNumber.Value.IsInt()
                     ? otherNumber.Value.GetAsInt()
                     : otherNumber.Value.GetAsFloat();
                 var currentNum = Value.IsInt() ? Value.GetAsInt() : Value.GetAsFloat();
                 var res = currentNum + otherNum;
                 TokenValue value;
-                var resStr = res.ToString();
+                string resStr = res.ToString();
                 if (resStr.Contains("."))
+                {
                     value = new TokenValue(typeof(float), resStr);
+                }
                 else
+                {
                     value = new TokenValue(typeof(int), resStr);
+                }
 
                 return new Tuple<Error, Value>(default, new NumberValue(value).SetContext(Context));
             }
@@ -42,18 +43,22 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
+                NumberValue otherNumber = (NumberValue) other;
                 var otherNum = otherNumber.Value.IsInt()
                     ? otherNumber.Value.GetAsInt()
                     : otherNumber.Value.GetAsFloat();
                 var currentNum = Value.IsInt() ? Value.GetAsInt() : Value.GetAsFloat();
                 var res = currentNum - otherNum;
                 TokenValue value;
-                var resStr = res.ToString();
+                string resStr = res.ToString();
                 if (resStr.Contains("."))
+                {
                     value = new TokenValue(typeof(float), resStr);
+                }
                 else
+                {
                     value = new TokenValue(typeof(int), resStr);
+                }
 
                 return new Tuple<Error, Value>(default, new NumberValue(value).SetContext(Context));
             }
@@ -65,14 +70,18 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
-                var res = Value.GetAsFloat() * otherNumber.Value.GetAsFloat();
+                NumberValue otherNumber = (NumberValue) other;
+                float res = Value.GetAsFloat() * otherNumber.Value.GetAsFloat();
                 TokenValue value;
-                var resStr = res.ToString();
+                string resStr = res.ToString();
                 if (resStr.Contains("."))
+                {
                     value = new TokenValue(typeof(float), resStr);
+                }
                 else
+                {
                     value = new TokenValue(typeof(int), resStr);
+                }
 
                 return new Tuple<Error, Value>(default, new NumberValue(value).SetContext(Context));
             }
@@ -84,19 +93,25 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
+                NumberValue otherNumber = (NumberValue) other;
 
                 if (otherNumber.Value.Value == "0")
+                {
                     return new Tuple<Error, Value>(new RuntimeError("Division by zero", Context, other.StartPos,
                         other.EndPos), default);
+                }
 
-                var res = Value.GetAsFloat() / otherNumber.Value.GetAsFloat();
+                float res = Value.GetAsFloat() / otherNumber.Value.GetAsFloat();
                 TokenValue value;
-                var resStr = res.ToString();
+                string resStr = res.ToString();
                 if (resStr.Contains("."))
+                {
                     value = new TokenValue(typeof(float), resStr);
+                }
                 else
+                {
                     value = new TokenValue(typeof(int), resStr);
+                }
 
                 return new Tuple<Error, Value>(default, new NumberValue(value).SetContext(Context));
             }
@@ -108,14 +123,18 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
-                var res = Value.GetAsFloat() % otherNumber.Value.GetAsFloat();
+                NumberValue otherNumber = (NumberValue) other;
+                float res = Value.GetAsFloat() % otherNumber.Value.GetAsFloat();
                 TokenValue value;
-                var resStr = res.ToString();
+                string resStr = res.ToString();
                 if (resStr.Contains("."))
+                {
                     value = new TokenValue(typeof(float), resStr);
+                }
                 else
+                {
                     value = new TokenValue(typeof(int), resStr);
+                }
 
                 return new Tuple<Error, Value>(default, new NumberValue(value).SetContext(Context));
             }
@@ -127,14 +146,18 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
-                var res = Math.Pow(Value.GetAsFloat(), otherNumber.Value.GetAsFloat());
+                NumberValue otherNumber = (NumberValue) other;
+                double res = Math.Pow(Value.GetAsFloat(), otherNumber.Value.GetAsFloat());
                 TokenValue value;
-                var resStr = res.ToString();
+                string resStr = res.ToString();
                 if (resStr.Contains("."))
+                {
                     value = new TokenValue(typeof(float), resStr);
+                }
                 else
+                {
                     value = new TokenValue(typeof(int), resStr);
+                }
 
                 return new Tuple<Error, Value>(default, new NumberValue(value).SetContext(Context));
             }
@@ -146,10 +169,15 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
+                NumberValue otherNumber = (NumberValue) other;
                 if (Value.Matches(otherNumber.Value))
+                {
                     return new Tuple<Error, Value>(default, True.Copy().SetContext(Context));
-                return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
+                else
+                {
+                    return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
             }
 
             return base.GetComparisonEQ(other);
@@ -159,10 +187,15 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
+                NumberValue otherNumber = (NumberValue) other;
                 if (!Value.Matches(otherNumber.Value))
+                {
                     return new Tuple<Error, Value>(default, True.Copy().SetContext(Context));
-                return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
+                else
+                {
+                    return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
             }
 
             return base.GetComparisonNEQ(other);
@@ -172,12 +205,17 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
-                var num1 = Value.GetAsFloat();
-                var num2 = otherNumber.Value.GetAsFloat();
+                NumberValue otherNumber = (NumberValue) other;
+                float num1 = Value.GetAsFloat();
+                float num2 = otherNumber.Value.GetAsFloat();
                 if (num1 < num2)
+                {
                     return new Tuple<Error, Value>(default, True.Copy().SetContext(Context));
-                return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
+                else
+                {
+                    return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
             }
 
             return base.GetComparisonLT(other);
@@ -187,12 +225,17 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
-                var num1 = Value.GetAsFloat();
-                var num2 = otherNumber.Value.GetAsFloat();
+                NumberValue otherNumber = (NumberValue) other;
+                float num1 = Value.GetAsFloat();
+                float num2 = otherNumber.Value.GetAsFloat();
                 if (num1 > num2)
+                {
                     return new Tuple<Error, Value>(default, True.Copy().SetContext(Context));
-                return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
+                else
+                {
+                    return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
             }
 
             return base.GetComparisonGT(other);
@@ -202,12 +245,17 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
-                var num1 = Value.GetAsFloat();
-                var num2 = otherNumber.Value.GetAsFloat();
+                NumberValue otherNumber = (NumberValue) other;
+                float num1 = Value.GetAsFloat();
+                float num2 = otherNumber.Value.GetAsFloat();
                 if (num1 <= num2)
+                {
                     return new Tuple<Error, Value>(default, True.Copy().SetContext(Context));
-                return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
+                else
+                {
+                    return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
             }
 
             return base.GetComparisonLEQ(other);
@@ -217,12 +265,17 @@ namespace IllusionScript.SDK.Values
         {
             if (other.GetType() == typeof(NumberValue))
             {
-                var otherNumber = (NumberValue)other;
-                var num1 = Value.GetAsFloat();
-                var num2 = otherNumber.Value.GetAsFloat();
+                NumberValue otherNumber = (NumberValue) other;
+                float num1 = Value.GetAsFloat();
+                float num2 = otherNumber.Value.GetAsFloat();
                 if (num1 >= num2)
+                {
                     return new Tuple<Error, Value>(default, True.Copy().SetContext(Context));
-                return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
+                else
+                {
+                    return new Tuple<Error, Value>(default, False.Copy().SetContext(Context));
+                }
             }
 
             return base.GetComparisonGEQ(other);
@@ -242,7 +295,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            var copy = new NumberValue(Value);
+            NumberValue copy = new NumberValue(Value);
             return copy.SetContext(Context).SetPosition(StartPos, EndPos);
         }
 
@@ -250,5 +303,9 @@ namespace IllusionScript.SDK.Values
         {
             return Value.GetAsString();
         }
+
+        public static readonly NumberValue True = new NumberValue(new TokenValue(typeof(int), "1"));
+        public static readonly NumberValue False = new NumberValue(new TokenValue(typeof(int), "0"));
+        public static NumberValue Null = new NumberValue(new TokenValue(typeof(int), "0"));
     }
 }

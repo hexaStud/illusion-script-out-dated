@@ -1,12 +1,13 @@
-﻿using IllusionScript.SDK.Bundler;
+﻿using System;
+using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK.Nodes
 {
     public class VarAssignNode : Node
     {
-        public bool DeclareNew;
-        public Node Node;
         public Token Token;
+        public Node Node;
+        public bool DeclareNew;
 
         public VarAssignNode(Token token, Node node, bool declareNew) : base(token.StartPos, node.EndPos)
         {
@@ -23,7 +24,7 @@ namespace IllusionScript.SDK.Nodes
         public override string __bundle__()
         {
             return "{" +
-                   $"\"type\": \"VarAssignNode\", \"token\": {Token.__bundle__()}, \"node\": {Node.__bundle__()}, \"declareNew\": {DeclareNew.ToString().ToLower()} \"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
+                   $"\"type\": \"VarAssignNode\", \"token\": {Token.__bundle__()}, \"node\": {Node.__bundle__()}, \"declareNew\": {DeclareNew.ToString().ToLower()}, \"startPos\": {StartPos.__bundle__()}, \"endPos\": {EndPos.__bundle__()}" +
                    "}";
         }
 

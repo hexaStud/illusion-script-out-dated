@@ -19,11 +19,14 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            var args = "[";
-            var first = true;
-            foreach (var node in Elements)
+            string args = "[";
+            bool first = true;
+            foreach (Node node in Elements)
             {
-                if (!first) args += ",";
+                if (!first)
+                {
+                    args += ",";
+                }
 
                 args += node.__bundle__();
                 first = false;
@@ -39,9 +42,12 @@ namespace IllusionScript.SDK.Nodes
         public override Node __unbundle__(Json json)
         {
             Elements = new List<Node>();
-            var elements = json.Get("elements");
-            for (var i = 0; i < Json.Length(elements); i++) Elements.Add(ConvertNode(elements.Get(i.ToString())));
-
+            Json elements = json.Get("elements");
+            for (int i = 0; i < Json.Length(elements); i++)
+            {
+                Elements.Add(ConvertNode(elements.Get(i.ToString())));
+            }
+            
             StartPos = Position.Convert(json.Get("startPos"));
             EndPos = Position.Convert(json.Get("endPos"));
             return this;

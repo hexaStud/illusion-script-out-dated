@@ -2,10 +2,10 @@
 
 namespace IllusionScript.SDK.Nodes
 {
-    internal class UseNode : HeaderNode
+    class UseNode : HeaderNode
     {
         public Token Module;
-
+        
         public UseNode(Position startPos, Position endPos, Token module) : base(startPos, endPos)
         {
             Module = module;

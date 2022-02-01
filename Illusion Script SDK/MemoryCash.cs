@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using IllusionScript.SDK.Extensions;
 
 namespace IllusionScript.SDK
@@ -32,14 +33,29 @@ namespace IllusionScript.SDK
             };
         }
 
-        public bool Exists(string path)
+        public bool Exists(string path, int type)
         {
-            return Memory.ContainsKey(Path.Join(path));
+            string x = Path.Join(path);
+            if (type == FILE)
+            {
+                return Memory.ContainsKey(Path.Join(x)) && Memory[x].Content != default(string);
+            }
+            if (type == AST)
+            {
+                return Memory.ContainsKey(Path.Join(x)) && Memory[x].Node != default(Node);
+            }
+            else
+            {
+                throw new Exception("Undefined type flag");
+            }
         }
 
         public MemoryItem Get(string path)
         {
             return Memory[Path.Join(path)];
         }
+
+        public const int FILE = 0;
+        public const int AST = 1;
     }
 }
