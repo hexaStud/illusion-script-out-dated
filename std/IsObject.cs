@@ -8,15 +8,15 @@ namespace IllusionScript.Lib.std
     public class IsObject : IBuiltInFunction
     {
         public static string Name = "isObject";
-        
-        public List<string> Args { get; } = new List<string>()
+
+        public List<string> Args { get; } = new()
         {
             "ele"
         };
 
         public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
         {
-            Value ele = context.SymbolTable.Get("ele").Value;
+            var ele = context.SymbolTable.Get("ele").Value;
 
             return new RuntimeResult().Success(ele.GetType() == typeof(ObjectValue)
                 ? NumberValue.True

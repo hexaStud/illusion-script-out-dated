@@ -1,6 +1,5 @@
 ﻿using IllusionScript.SDK;
 using IllusionScript.SDK.Plugin;
-using IllusionScript.SDK.Values;
 
 namespace IllusionScript.Lib.system
 {

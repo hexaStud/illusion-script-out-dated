@@ -122,6 +122,9 @@ class Lib.os.Main
 ' Lib system
 class Lib.system.Main
 
+' Tests
+class Tests.LexerTest
+
 SDK.Node <|-- SDK.Nodes.BinOpNode
 SDK.Node <|-- SDK.Nodes.BreakNode
 SDK.Node <|-- SDK.Nodes.CallNode

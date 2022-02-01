@@ -9,11 +9,11 @@ namespace IllusionScript.Lib.std
     public class Read : IBuiltInFunction
     {
         public static string Name = "read";
-        public List<string> Args { get; } = new List<string>();
+        public List<string> Args { get; } = new();
 
         public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
         {
-            string a = Console.ReadLine();
+            var a = Console.ReadLine();
             return new RuntimeResult().Success(new StringValue(new TokenValue(typeof(string), a)));
         }
     }

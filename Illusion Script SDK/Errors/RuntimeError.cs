@@ -14,22 +14,18 @@ namespace IllusionScript.SDK.Errors
 
         private string GenerateTraceback()
         {
-            string result = "\n";
-            Position pos = StartPos;
-            Context context = Context;
+            var result = "\n";
+            var pos = StartPos;
+            var context = Context;
 
             while (context != default(Context))
             {
                 if (pos != default(Position))
-                {
                     result =
                         $"File {Path.Join(pos.Filepath, pos.FileName)}, line {pos.Ln + 1}, {context.DisplayName}\n" +
                         result;
-                }
                 else
-                {
-                    result = $"File [Native code] <index function call>\n" + result;
-                }
+                    result = "File [Native code] <index function call>\n" + result;
 
                 pos = context.ParentEntryPos != default(Position) ? context.ParentEntryPos : default;
                 context = Context.Parent != default(Context) ? context.Parent : default;
@@ -40,7 +36,7 @@ namespace IllusionScript.SDK.Errors
 
         public override string ToString()
         {
-            string result = GenerateTraceback();
+            var result = GenerateTraceback();
             result += $"{Name}: {Details}\n";
             // result += StringWithArrows();
             return result;

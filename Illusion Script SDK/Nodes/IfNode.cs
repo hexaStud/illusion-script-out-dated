@@ -4,7 +4,6 @@ using IllusionScript.SDK.Nodes.Assets;
 
 namespace IllusionScript.SDK.Nodes
 {
-
     public class IfNode : Node
     {
         public List<IfCase> Cases;
@@ -24,14 +23,11 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            string cases = "[";
-            bool first = true;
-            foreach (IfCase node in Cases)
+            var cases = "[";
+            var first = true;
+            foreach (var node in Cases)
             {
-                if (!first)
-                {
-                    cases += ",";
-                }
+                if (!first) cases += ",";
 
                 cases += node.__bundle__();
                 first = false;
@@ -46,13 +42,10 @@ namespace IllusionScript.SDK.Nodes
 
         public override Node __unbundle__(Json json)
         {
-            Json cases = json.Get("cases");
+            var cases = json.Get("cases");
 
             Cases = new List<IfCase>();
-            for (int i = 0; i < Json.Length(cases); i++)
-            {
-                Cases.Add(new IfCase().__unbundle__(cases.Get(i.ToString())));
-            }
+            for (var i = 0; i < Json.Length(cases); i++) Cases.Add(new IfCase().__unbundle__(cases.Get(i.ToString())));
 
             ElseCase = (ElseCaseNode)ConvertNode(json.Get("elseCase"));
 

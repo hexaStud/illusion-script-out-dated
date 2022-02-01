@@ -9,40 +9,32 @@ namespace IllusionScript
 
         public InIFile(string path)
         {
-            string[] lines = File.ReadAllLines(path);
-            List<string> list = new List<string>();
-            foreach (string line in lines)
-            {
+            var lines = File.ReadAllLines(path);
+            var list = new List<string>();
+            foreach (var line in lines)
                 if (!line.StartsWith(";"))
-                {
                     list.Add(line);
-                }
-            }
 
             Lines = list.ToArray();
         }
 
         public List<string> Read(string section, string key)
         {
-            List<string> res = new List<string>();
-            string currentSection = "";
+            var res = new List<string>();
+            var currentSection = "";
 
-            foreach (string readerLine in Lines)
-            {
+            foreach (var readerLine in Lines)
                 if (readerLine.StartsWith("[") && readerLine.EndsWith("]"))
                 {
                     currentSection = readerLine;
                 }
                 else if (currentSection == $"[{section}]")
                 {
-                    string[] lineParts = readerLine.Split("=", 2);
+                    var lineParts = readerLine.Split("=", 2);
 
                     if (lineParts.Length >= 1 && lineParts[0].TrimStart().TrimEnd() == key)
-                    {
                         res.Add(lineParts[1].TrimStart().TrimEnd());
-                    }
                 }
-            }
 
             return res;
         }

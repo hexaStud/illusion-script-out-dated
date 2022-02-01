@@ -15,7 +15,7 @@ namespace IllusionScript.SDK
         public void Set(string path, string content)
         {
             path = Path.Join(path);
-            Memory[path] = new MemoryItem()
+            Memory[path] = new MemoryItem
             {
                 Content = content,
                 Node = default
@@ -25,7 +25,7 @@ namespace IllusionScript.SDK
         public void Set(string path, Node node)
         {
             path = Path.Join(path);
-            Memory[path] = new MemoryItem()
+            Memory[path] = new MemoryItem
             {
                 Content = default,
                 Node = node

@@ -4,9 +4,9 @@ namespace IllusionScript.SDK.Nodes
 {
     public class VarAssignNode : Node
     {
-        public Token Token;
-        public Node Node;
         public bool DeclareNew;
+        public Node Node;
+        public Token Token;
 
         public VarAssignNode(Token token, Node node, bool declareNew) : base(token.StartPos, node.EndPos)
         {

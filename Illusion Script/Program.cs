@@ -4,26 +4,24 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using IllusionScript.SDK;
+using IllusionScript.SDK.Bundler;
 using IllusionScript.SDK.Nodes;
 using IllusionScript.SDK.Plugin;
 using IllusionScript.SDK.Values;
-using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript
 {
-    class Program
+    internal class Program
     {
         public static InIFile Config;
 
         private static void LoadExtension()
         {
-            string root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            List<string> extensions = new List<string>();
+            var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var extensions = new List<string>();
 
-            foreach (string extension in Config.Read("Extensions", "extension"))
-            {
+            foreach (var extension in Config.Read("Extensions", "extension"))
                 extensions.Add(Path.Join(root, extension));
-            }
 
             PluginLoader.Assemblies = extensions;
             PluginLoader.LoadPlugins();
@@ -31,9 +29,9 @@ namespace IllusionScript
 
         private static void SetupConfig()
         {
-            List<string> fileImport = Config.Read("Config", "allowFileImport");
+            var fileImport = Config.Read("Config", "allowFileImport");
             Constants.Config.FileImport = fileImport.Count > 0 && fileImport[0] == "true";
-            List<string> fileExport = Config.Read("Config", "allowFileExport");
+            var fileExport = Config.Read("Config", "allowFileExport");
             Constants.Config.FileExport = fileExport.Count > 0 && fileExport[0] == "true";
         }
 
@@ -43,19 +41,19 @@ namespace IllusionScript
             LoadExtension();
             SetupConfig();
 
-            List<string> programArgs = new List<string>();
-            List<string> interpreterArgs = new List<string>();
-            bool isInterpreterArgs = true;
+            var programArgs = new List<string>();
+            var interpreterArgs = new List<string>();
+            var isInterpreterArgs = true;
 
-            for (int i = 0; i < args.Length; i++)
+            for (var i = 0; i < args.Length; i++)
             {
-                string s = args[i];
+                var s = args[i];
 
                 if (isInterpreterArgs)
                 {
                     if (s == "-f")
                     {
-                        string arg = s;
+                        var arg = s;
                         interpreterArgs.Add(arg);
                         i++;
                         interpreterArgs.Add(args[i]);
@@ -74,17 +72,14 @@ namespace IllusionScript
 
             if (interpreterArgs.Contains("-d"))
             {
-                for (int i = 0; i < PluginLoader.Assemblies.Count; i++)
+                for (var i = 0; i < PluginLoader.Assemblies.Count; i++)
                 {
                     Console.WriteLine(PluginLoader.Assemblies[i].Replace("/", "\\"));
-                    IModule plugin = PluginLoader.Plugins[i];
-                    SymbolTable fake = new SymbolTable();
+                    var plugin = PluginLoader.Plugins[i];
+                    var fake = new SymbolTable();
                     Console.WriteLine($"[{plugin.Name}]");
                     plugin.Load(fake);
-                    foreach (string key in fake.GetKeys())
-                    {
-                        Console.WriteLine($"> {key}");
-                    }
+                    foreach (var key in fake.GetKeys()) Console.WriteLine($"> {key}");
 
                     Console.WriteLine(" ");
                 }
@@ -93,14 +88,14 @@ namespace IllusionScript
             }
 
             Interpreter.Argv = programArgs;
-            for (int i = 0; i < interpreterArgs.Count; i++)
+            for (var i = 0; i < interpreterArgs.Count; i++)
             {
-                string arg = interpreterArgs[i];
+                var arg = interpreterArgs[i];
 
                 if (arg == "-f")
                 {
                     i++;
-                    string file = interpreterArgs[i];
+                    var file = interpreterArgs[i];
 
                     string data;
                     FileInfo fileInfo;
@@ -125,13 +120,9 @@ namespace IllusionScript
                     i++;
 
                     if (arg.StartsWith("."))
-                    {
                         path = Path.Join(Directory.GetCurrentDirectory(), interpreterArgs[i]);
-                    }
                     else
-                    {
                         path = interpreterArgs[i];
-                    }
 
                     Bundle(path);
                     Environment.Exit(0);
@@ -143,27 +134,22 @@ namespace IllusionScript
 
         private static List<string> ReadDir(string path, bool subDirs)
         {
-            List<string> entries = new List<string>();
+            var entries = new List<string>();
 
             if (Directory.Exists(path))
             {
-                foreach (string x in Directory.GetFiles(path))
+                foreach (var x in Directory.GetFiles(path))
                 {
-                    string entry = new FileInfo(x).Name;
-                    if (entry.EndsWith(".ils"))
-                    {
-                        entries.Add(Path.Join(path, entry));
-                    }
+                    var entry = new FileInfo(x).Name;
+                    if (entry.EndsWith(".ils")) entries.Add(Path.Join(path, entry));
                 }
 
                 if (subDirs)
-                {
-                    foreach (string x in Directory.GetDirectories(path))
+                    foreach (var x in Directory.GetDirectories(path))
                     {
-                        string entry = new DirectoryInfo(x).Name;
+                        var entry = new DirectoryInfo(x).Name;
                         entries.AddRange(ReadDir(Path.Join(path, entry), true));
                     }
-                }
             }
             else
             {
@@ -175,36 +161,30 @@ namespace IllusionScript
 
         private static void Bundle(string conf)
         {
-            XmlReader reader = XmlReader.Create(conf);
-            List<string> files = new List<string>();
-            bool overwrite = false;
+            var reader = XmlReader.Create(conf);
+            var files = new List<string>();
+            var overwrite = false;
             string target = default;
             string name = default;
 
             while (reader.Read())
-            {
                 if (reader.IsStartElement())
-                {
                     switch (reader.Name)
                     {
                         case "folder":
-                            bool sub = reader.GetAttribute("subDirs") == "true";
+                            var sub = reader.GetAttribute("subDirs") == "true";
                             reader.Read();
                             files.AddRange(ReadDir(Path.Join(Directory.GetCurrentDirectory(), reader.Value), sub));
                             break;
                         case "file":
                             reader.Read();
-                            string path = reader.Value.StartsWith(".")
+                            var path = reader.Value.StartsWith(".")
                                 ? Path.Join(Directory.GetCurrentDirectory(), reader.Value)
                                 : reader.Value;
                             if (File.Exists(path) && path.EndsWith(".ils"))
-                            {
                                 files.Add(path);
-                            }
                             else
-                            {
                                 throw new Exception($"File '{path}' not found or is not a ils file");
-                            }
 
                             break;
                         case "target":
@@ -216,10 +196,7 @@ namespace IllusionScript
                         case "name":
                             reader.Read();
                             name = reader.Value;
-                            if (!name.EndsWith(".ila"))
-                            {
-                                name += ".ila";
-                            }
+                            if (!name.EndsWith(".ila")) name += ".ila";
 
                             break;
                         case "overwrite":
@@ -227,41 +204,31 @@ namespace IllusionScript
                             overwrite = reader.Value == "true";
                             break;
                     }
-                }
-            }
 
             if (name == default)
-            {
                 throw new Exception("No name in the config file is given");
-            }
-            else if (target == default)
-            {
+            if (target == default)
                 throw new Exception("No output dir is in the config file declared");
-            }
-            else if (files.Count == 0)
-            {
-                throw new Exception("Cannot bundle zero files");
-            }
+            if (files.Count == 0) throw new Exception("Cannot bundle zero files");
 
             Console.WriteLine($"Output: {target}");
             Console.WriteLine($"Name: {name}");
             Console.WriteLine("\nFiles:");
-            foreach (string s in files)
+            foreach (var s in files) Console.WriteLine("> " + s.Replace("/", "\\"));
+
+            Console.WriteLine("\n");
+
+            var converter = new Converter();
+
+            for (var i = 0; i < files.Count; i++)
             {
-                Console.WriteLine("> " + s.Replace("/", "\\"));
-            }
+                var file = files[i];
 
-            Console.WriteLine("\n\n");
-
-            Converter converter = new Converter();
-
-            foreach (string file in files)
-            {
-                Console.WriteLine($"Link '{file.Replace("/", "\\")}'");
-                string content = File.ReadAllText(file);
-                FileInfo info = new FileInfo(file);
-                Lexer lexer = new Lexer(content, info.Name, info.DirectoryName);
-                Tuple<Error, List<Token>> lexerRes = lexer.MakeTokens();
+                Console.WriteLine($"[{i + 1}|{files.Count}] Link '{file.Replace("/", "\\")}'");
+                var content = File.ReadAllText(file);
+                var info = new FileInfo(file);
+                var lexer = new Lexer(content, info.Name, info.DirectoryName);
+                var lexerRes = lexer.MakeTokens();
 
                 if (lexerRes.Item1 != default(Error))
                 {
@@ -269,8 +236,8 @@ namespace IllusionScript
                     Environment.Exit(1);
                 }
 
-                Parser parser = new Parser(lexerRes.Item2);
-                ParserResult parserRes = parser.Parse();
+                var parser = new Parser(lexerRes.Item2);
+                var parserRes = parser.Parse();
                 if (parserRes.Error != default(Error))
                 {
                     Console.WriteLine(parserRes.Error.ToString());
@@ -280,12 +247,9 @@ namespace IllusionScript
                 converter.Bundle((ListNode)parserRes.Node);
             }
 
-            string output = Path.Join(target, name);
+            var output = Path.Join(target, name);
 
-            if (!Directory.Exists(target))
-            {
-                Directory.CreateDirectory(target);
-            }
+            if (!Directory.Exists(target)) Directory.CreateDirectory(target);
 
             Console.WriteLine("\nWrite down");
             converter.WriteDown(output, overwrite);
@@ -294,12 +258,12 @@ namespace IllusionScript
         private static void Execute(string data, string fileName, string filepath, bool showResult = true,
             bool main = false)
         {
-            Context context = new Context("<program>")
+            var context = new Context("<program>")
             {
-                SymbolTable = new SymbolTable()
+                SymbolTable = SymbolTable.GlobalSymbols
             };
 
-            Tuple<Error, Value, Dictionary<string, Value>> res = Executor.Run(data, fileName, filepath, context,
+            var res = Executor.Run(data, fileName, filepath, context,
                 main);
             if (res.Item1 != default(Error))
             {
@@ -311,17 +275,13 @@ namespace IllusionScript
                 {
                     if (res.Item2.GetType() == typeof(ListValue))
                     {
-                        ListValue list = (ListValue)res.Item2;
+                        var list = (ListValue)res.Item2;
 
                         Console.Write(Constants.EOL);
                         if (list.Elements.Count == 1)
-                        {
                             Console.Write(list.Elements[0].__repr__(0));
-                        }
                         else
-                        {
                             Console.Write(list.__repr__(0));
-                        }
                     }
                     else
                     {
@@ -337,11 +297,8 @@ namespace IllusionScript
         {
             while (true)
             {
-                string input = Console.ReadLine();
-                if (input.Trim() == "")
-                {
-                    continue;
-                }
+                var input = Console.ReadLine();
+                if (input.Trim() == "") continue;
 
                 Execute(input, "<stdin>", Directory.GetCurrentDirectory());
             }

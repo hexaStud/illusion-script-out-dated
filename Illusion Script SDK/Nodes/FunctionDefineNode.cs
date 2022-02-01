@@ -5,13 +5,13 @@ namespace IllusionScript.SDK.Nodes
 {
     public class FunctionDefineNode : Node
     {
-        public Token VarName;
         public List<Token> ArgName;
         public Node Body;
         public bool ShouldAutoReturn;
+        public Token VarName;
 
         public FunctionDefineNode(Token varName, List<Token> argName, Node body, bool shouldAutoReturn) : base(
-            varName != default(Token) ? varName.StartPos : (argName.Count > 0) ? argName[0].StartPos : body.StartPos,
+            varName != default(Token) ? varName.StartPos : argName.Count > 0 ? argName[0].StartPos : body.StartPos,
             body.EndPos)
         {
             VarName = varName;
@@ -27,14 +27,11 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            string args = "[";
-            bool first = true;
-            foreach (Token node in ArgName)
+            var args = "[";
+            var first = true;
+            foreach (var node in ArgName)
             {
-                if (!first)
-                {
-                    args += ",";
-                }
+                if (!first) args += ",";
 
                 args += node.__bundle__();
                 first = false;
@@ -51,16 +48,13 @@ namespace IllusionScript.SDK.Nodes
             VarName = Token.Convert(json.Get("varName"));
             ArgName = new List<Token>();
 
-            Json args = json.Get("argName");
+            var args = json.Get("argName");
 
-            for (int i = 0; i < Json.Length(args); i++)
-            {
-                ArgName.Add(Token.Convert(args.Get(i.ToString())));
-            }
+            for (var i = 0; i < Json.Length(args); i++) ArgName.Add(Token.Convert(args.Get(i.ToString())));
 
             Body = ConvertNode(json.Get("body"));
             ShouldAutoReturn = json.GetAsBool("shouldAutoReturn");
-            
+
             StartPos = Position.Convert(json.Get("startPos"));
             EndPos = Position.Convert(json.Get("endPos"));
             return this;

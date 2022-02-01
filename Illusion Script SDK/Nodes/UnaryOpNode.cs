@@ -1,12 +1,11 @@
-﻿using System;
-using IllusionScript.SDK.Bundler;
+﻿using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK.Nodes
 {
     public class UnaryOpNode : Node
     {
-        public Token OpToken;
         public Node Node;
+        public Token OpToken;
 
         public UnaryOpNode(Token opToken, Node node) : base(opToken.StartPos, node.EndPos)
         {
@@ -30,7 +29,7 @@ namespace IllusionScript.SDK.Nodes
         {
             OpToken = Token.Convert(json.Get("opToken"));
             Node = ConvertNode(json.Get("node"));
-            
+
             StartPos = Position.Convert(json.Get("startPos"));
             EndPos = Position.Convert(json.Get("endPos"));
             return this;

@@ -36,20 +36,14 @@ namespace IllusionScript.SDK
 
         public int GetAsInt()
         {
-            if (!int.TryParse(Value, out int value))
-            {
-                throw new Exception($"Cannot convert '{Value}' to int");
-            }
+            if (!int.TryParse(Value, out var value)) throw new Exception($"Cannot convert '{Value}' to int");
 
             return value;
         }
 
         public float GetAsFloat()
         {
-            if (!float.TryParse(Value, out float value))
-            {
-                throw new Exception($"Cannot convert '{Value}' to float");
-            }
+            if (!float.TryParse(Value, out var value)) throw new Exception($"Cannot convert '{Value}' to float");
 
             return value;
         }
@@ -61,7 +55,7 @@ namespace IllusionScript.SDK
 
         public static TokenValue Convert(Json json)
         {
-            TokenValue tokenValue = new TokenValue(default, default);
+            var tokenValue = new TokenValue(default, default);
             Type type;
             switch (json.GetAsText("type"))
             {

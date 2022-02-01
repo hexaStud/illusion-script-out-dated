@@ -2,11 +2,11 @@
 {
     public class RuntimeResult
     {
-        public Value Value;
         public Error Error;
         public Value FunctionReturn;
-        public bool LoopShouldContinue;
         public bool LoopShouldBreak;
+        public bool LoopShouldContinue;
+        public Value Value;
 
         public RuntimeResult()
         {
@@ -63,8 +63,8 @@
 
         public bool ShouldReturn()
         {
-            return Error != default(Error) || FunctionReturn != default(Value) || LoopShouldContinue != default(bool) ||
-                   LoopShouldBreak != default(bool);
+            return Error != default(Error) || FunctionReturn != default(Value) || LoopShouldContinue != default ||
+                   LoopShouldBreak != default;
         }
     }
 }

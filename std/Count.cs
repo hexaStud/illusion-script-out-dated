@@ -9,20 +9,20 @@ namespace IllusionScript.Lib.std
     public class Count : IBuiltInFunction
     {
         public static string Name = "count";
-        public List<string> Args { get; } = new List<string>() {"ele"};
+        public List<string> Args { get; } = new() { "ele" };
 
         public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
         {
-            Value ele = context.SymbolTable.Get("ele").Value;
-            int count = 0;
+            var ele = context.SymbolTable.Get("ele").Value;
+            var count = 0;
             if (ele.GetType() == typeof(StringValue))
             {
-                StringValue stringValue = (StringValue) ele;
+                var stringValue = (StringValue)ele;
                 count = stringValue.Value.GetAsString().Length;
             }
             else if (ele.GetType() == typeof(ListValue))
             {
-                ListValue listValue = (ListValue) ele;
+                var listValue = (ListValue)ele;
                 count = listValue.Elements.Count;
             }
             else

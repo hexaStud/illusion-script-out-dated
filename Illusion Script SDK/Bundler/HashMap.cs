@@ -1,52 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Collections.Generic;
 
 namespace IllusionScript.SDK.Bundler
 {
     public class HashMap
     {
-        private Dictionary<string, string> Data;
+        private readonly Dictionary<string, string> Data;
 
         private HashMap(Dictionary<string, string> entries)
         {
             Data = entries;
         }
 
+        public string this[string index] => Data[index];
+
         public Dictionary<string, string>.KeyCollection Keys()
         {
             return Data.Keys;
         }
 
-        public string this[string index] => Data[index];
-
         public static HashMap GetHashMap(ZipArchive arch)
         {
-            ZipArchiveEntry entry = arch.GetEntry("hashmap");
+            var entry = arch.GetEntry("hashmap");
             if (entry != null)
             {
-                Stream stream = entry.Open();
-                StreamReader reader = new StreamReader(stream);
-                string content = reader.ReadToEnd();
-                string[] lines = content.Split("\n");
-                Dictionary<string, string> map = new Dictionary<string, string>();
+                var stream = entry.Open();
+                var reader = new StreamReader(stream);
+                var content = reader.ReadToEnd();
+                var lines = content.Split("\n");
+                var map = new Dictionary<string, string>();
 
-                foreach (string line in lines)
+                foreach (var line in lines)
                 {
-                    string[] parts = line.Split("=");
-                    if (parts.Length == 2)
-                    {
-                        map[parts[0]] = parts[1];
-                    }
+                    var parts = line.Split("=");
+                    if (parts.Length == 2) map[parts[0]] = parts[1];
                 }
 
                 return new HashMap(map);
             }
-            else
-            {
-                throw new Exception("Cannot find hashmap in ila");
-            }
+
+            throw new Exception("Cannot find hashmap in ila");
         }
     }
 }

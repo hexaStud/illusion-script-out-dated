@@ -6,9 +6,9 @@ namespace IllusionScript.SDK
 {
     public class Value
     {
-        public Position StartPos;
-        public Position EndPos;
         protected Context Context;
+        public Position EndPos;
+        public Position StartPos;
 
         public Value SetPosition(Position startPos, Position endPos)
         {
@@ -131,6 +131,11 @@ namespace IllusionScript.SDK
         public virtual string __repr__(int stage)
         {
             return "";
+        }
+
+        public virtual bool IsBuiltIn()
+        {
+            return false;
         }
     }
 }

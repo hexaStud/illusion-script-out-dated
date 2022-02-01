@@ -6,7 +6,7 @@ namespace IllusionScript.SDK.Values
 {
     public class BuiltInFunctionValue : BaseFunctionValue
     {
-        private static readonly Dictionary<string, IBuiltInFunction> BaseInFunctions = new Dictionary<string, IBuiltInFunction>();
+        private static readonly Dictionary<string, IBuiltInFunction> BaseInFunctions = new();
 
         private BuiltInFunctionValue(string name) : base(name)
         {
@@ -14,26 +14,17 @@ namespace IllusionScript.SDK.Values
 
         public override RuntimeResult Execute(List<Value> args, Value self = default)
         {
-            RuntimeResult res = new RuntimeResult();
-            Context context = GenerateNewContext();
+            var res = new RuntimeResult();
+            var context = GenerateNewContext();
 
-            if (!BaseInFunctions.ContainsKey(Name))
-            {
-                throw NoVisitMethod(Name);
-            }
+            if (!BaseInFunctions.ContainsKey(Name)) throw NoVisitMethod(Name);
 
-            IBuiltInFunction func = BaseInFunctions[Name];
+            var func = BaseInFunctions[Name];
             res.Register(CheckAndPopulate(func.Args, args, context));
-            if (res.ShouldReturn())
-            {
-                return res;
-            }
+            if (res.ShouldReturn()) return res;
 
-            Value returnValue = res.Register(func.Exec(context, this));
-            if (res.ShouldReturn())
-            {
-                return res;
-            }
+            var returnValue = res.Register(func.Exec(context, this));
+            if (res.ShouldReturn()) return res;
 
             return res.Success(returnValue);
         }
@@ -45,7 +36,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            BuiltInFunctionValue copy = new BuiltInFunctionValue(Name);
+            var copy = new BuiltInFunctionValue(Name);
             copy.SetContext(Context);
             copy.SetPosition(StartPos, EndPos);
             return copy;
@@ -54,6 +45,11 @@ namespace IllusionScript.SDK.Values
         public override string __repr__(int stage)
         {
             return $"<function {Name}[Native]>";
+        }
+
+        public override bool IsBuiltIn()
+        {
+            return true;
         }
 
         public static BuiltInFunctionValue Define(string name, IBuiltInFunction func)

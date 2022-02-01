@@ -4,8 +4,8 @@ namespace IllusionScript.SDK.Nodes
 {
     public class WhileNode : Node
     {
-        public Node Condition;
         public Node Body;
+        public Node Condition;
         public bool ShouldReturnNull;
 
         public WhileNode(Node condition, Node body, bool shouldReturnNull) : base(condition.StartPos, body.EndPos)

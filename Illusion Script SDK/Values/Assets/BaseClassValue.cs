@@ -4,12 +4,12 @@ namespace IllusionScript.SDK.Values.Assets
 {
     public class BaseClassValue : Value
     {
-        public string Name;
-        public List<Value> ConstructorArgs; 
         public MethodValue Constructor;
-        
+        public List<Value> ConstructorArgs;
+
         protected BaseClassValue Extends;
         protected List<ClassItemValue> Fields;
+        public string Name;
         protected List<ClassItemValue> StaticFields;
 
         protected BaseClassValue(string name, List<ClassItemValue> fields, List<ClassItemValue> staticFields,
@@ -25,23 +25,17 @@ namespace IllusionScript.SDK.Values.Assets
 
         protected Dictionary<string, Value> ConvertFields(List<ClassItemValue> fields)
         {
-            Dictionary<string, Value> convertedFields = new Dictionary<string, Value>();
+            var convertedFields = new Dictionary<string, Value>();
 
             if (Extends != default(ClassValue))
             {
-                Dictionary<string, Value> extends = Extends.ConvertFields(Extends.Fields);
-                foreach (KeyValuePair<string, Value> extend in extends)
-                {
-                    convertedFields[extend.Key] = extend.Value;
-                }
+                var extends = Extends.ConvertFields(Extends.Fields);
+                foreach (var extend in extends) convertedFields[extend.Key] = extend.Value;
             }
 
-            foreach (ClassItemValue field in fields)
+            foreach (var field in fields)
             {
-                if (field.Name == Name && field.GetType() == typeof(MethodValue))
-                {
-                    Constructor = (MethodValue)field;
-                }
+                if (field.Name == Name && field.GetType() == typeof(MethodValue)) Constructor = (MethodValue)field;
 
                 convertedFields[field.Name] = field.Self;
             }
@@ -51,28 +45,22 @@ namespace IllusionScript.SDK.Values.Assets
 
         protected Dictionary<string, Value> BuildStaticFields(List<ClassItemValue> fields)
         {
-            Dictionary<string, Value> convertedFields = new Dictionary<string, Value>();
+            var convertedFields = new Dictionary<string, Value>();
 
             if (Extends != default(ClassValue))
             {
-                Dictionary<string, Value> extends = Extends.BuildStaticFields(Extends.StaticFields);
-                foreach (KeyValuePair<string, Value> extend in extends)
-                {
-                    convertedFields[extend.Key] = extend.Value;
-                }
+                var extends = Extends.BuildStaticFields(Extends.StaticFields);
+                foreach (var extend in extends) convertedFields[extend.Key] = extend.Value;
             }
 
-            foreach (ClassItemValue field in fields)
-            {
-                convertedFields[field.Name] = field.Self;
-            }
+            foreach (var field in fields) convertedFields[field.Name] = field.Self;
 
             return convertedFields;
         }
 
         protected Dictionary<string, Value> CreateConstructor(BaseClassValue self)
         {
-            Dictionary<string, Value> constructor = new Dictionary<string, Value>();
+            var constructor = new Dictionary<string, Value>();
             constructor["className"] =
                 new StringValue(new TokenValue(typeof(string), Name))
                     .SetContext(Context)
@@ -83,10 +71,8 @@ namespace IllusionScript.SDK.Values.Assets
                 .SetPosition(StartPos, EndPos);
 
             if (self.Extends != default(ClassValue))
-            {
                 constructor["extends"] = new ObjectValue(self.Extends.CreateConstructor(self.Extends))
                     .SetContext(Context).SetPosition(StartPos, EndPos);
-            }
 
             return constructor;
         }

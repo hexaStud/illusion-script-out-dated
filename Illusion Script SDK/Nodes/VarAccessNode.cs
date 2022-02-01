@@ -2,7 +2,6 @@
 
 namespace IllusionScript.SDK.Nodes
 {
-
     public class VarAccessNode : Node
     {
         public Token Token;
@@ -27,7 +26,7 @@ namespace IllusionScript.SDK.Nodes
         public override Node __unbundle__(Json json)
         {
             Token = Token.Convert(json.Get("token"));
-            
+
             StartPos = Position.Convert(json.Get("startPos"));
             EndPos = Position.Convert(json.Get("endPos"));
             return this;

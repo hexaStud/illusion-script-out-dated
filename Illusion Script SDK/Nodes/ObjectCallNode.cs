@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using IllusionScript.SDK.Bundler;
 
 namespace IllusionScript.SDK.Nodes
 {
     public class ObjectCallNode : Node
     {
-        public Node Node;
         public List<Node> ArgNode;
+        public Node Node;
 
         public ObjectCallNode(Node node, List<Node> argNode) : base(node.StartPos,
-            (argNode.Count > 0) ? argNode[^1].EndPos : node.EndPos)
+            argNode.Count > 0 ? argNode[^1].EndPos : node.EndPos)
         {
             Node = node;
             ArgNode = argNode;
@@ -23,14 +22,11 @@ namespace IllusionScript.SDK.Nodes
 
         public override string __bundle__()
         {
-            string args = "[";
-            bool first = true;
-            foreach (Node node in ArgNode)
+            var args = "[";
+            var first = true;
+            foreach (var node in ArgNode)
             {
-                if (!first)
-                {
-                    args += ",";
-                }
+                if (!first) args += ",";
 
                 args += node.__bundle__();
                 first = false;
@@ -46,11 +42,8 @@ namespace IllusionScript.SDK.Nodes
         public override Node __unbundle__(Json json)
         {
             ArgNode = new List<Node>();
-            Json args = json.Get("argNode");
-            for (int i = 0; i < Json.Length(args); i++)
-            {
-                ArgNode.Add(ConvertNode(args.Get(i.ToString())));
-            }
+            var args = json.Get("argNode");
+            for (var i = 0; i < Json.Length(args); i++) ArgNode.Add(ConvertNode(args.Get(i.ToString())));
 
             Node = ConvertNode(json.Get("node"));
 

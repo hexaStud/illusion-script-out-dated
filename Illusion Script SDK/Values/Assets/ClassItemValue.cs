@@ -5,6 +5,12 @@ namespace IllusionScript.SDK.Values.Assets
 {
     public abstract class ClassItemValue : Value
     {
+        public static readonly Token PUBLIC =
+            new(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.PUBLIC));
+
+        public static readonly Token PRIVATE =
+            new(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.PRIVATE));
+
         public Token ContextIsolation;
         public string Name;
         public Value Self;
@@ -18,7 +24,7 @@ namespace IllusionScript.SDK.Values.Assets
 
         protected Context GenerateNewContext()
         {
-            Context context = new Context(Name, Context, StartPos)
+            var context = new Context(Name, Context, StartPos)
             {
                 SymbolTable = new SymbolTable(Context.SymbolTable)
             };
@@ -27,28 +33,24 @@ namespace IllusionScript.SDK.Values.Assets
 
         protected RuntimeResult CheckArgs(List<string> argsName, List<Value> args)
         {
-            RuntimeResult res = new RuntimeResult();
+            var res = new RuntimeResult();
             if (args.Count < argsName.Count)
-            {
                 return res.Failure(new RuntimeError(
                     $"{argsName.Count - args.Count} too many args passed into '{Name}'", Context, StartPos, EndPos));
-            }
 
             if (args.Count > argsName.Count)
-            {
                 return res.Failure(new RuntimeError(
                     $"{argsName.Count - args.Count} too many args passed into '{Name}'", Context, StartPos, EndPos));
-            }
 
             return res.Success(NumberValue.Null);
         }
 
         protected void PopulateArgs(List<string> argNames, List<Value> args, Context context)
         {
-            for (int i = 0; i < args.Count; i++)
+            for (var i = 0; i < args.Count; i++)
             {
-                string name = argNames[i];
-                Value value = args[i];
+                var name = argNames[i];
+                var value = args[i];
 
                 value.SetContext(context);
                 context.SymbolTable.Set(name, value);
@@ -57,21 +59,12 @@ namespace IllusionScript.SDK.Values.Assets
 
         protected RuntimeResult CheckAndPopulate(List<string> argNames, List<Value> args, Context context)
         {
-            RuntimeResult res = new RuntimeResult();
+            var res = new RuntimeResult();
             res.Register(CheckArgs(argNames, args));
-            if (res.ShouldReturn())
-            {
-                return res;
-            }
+            if (res.ShouldReturn()) return res;
 
             PopulateArgs(argNames, args, context);
             return res.Success(NumberValue.Null);
         }
-
-        public static readonly Token PUBLIC =
-            new Token(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.PUBLIC));
-
-        public static readonly Token PRIVATE =
-            new Token(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.PRIVATE));
     }
 }

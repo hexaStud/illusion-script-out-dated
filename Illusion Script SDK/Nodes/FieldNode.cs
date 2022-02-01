@@ -5,8 +5,8 @@ namespace IllusionScript.SDK.Nodes
     public class FieldNode : Node
     {
         public Token ContextIsolation;
-        public Token Token;
         public Node Node;
+        public Token Token;
 
         public FieldNode(Token contextIsolation, Token token, Node node) : base(token.StartPos,
             node.EndPos)

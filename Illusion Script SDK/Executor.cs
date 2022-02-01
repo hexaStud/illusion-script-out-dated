@@ -9,21 +9,17 @@ namespace IllusionScript.SDK
         public static Tuple<Error, Value, Dictionary<string, Value>> Run(string text, string fileName,
             string filePath, Context context, bool main = false)
         {
-            Lexer lexer = new Lexer(text, fileName, filePath);
-            Tuple<Error, List<Token>> res = lexer.MakeTokens();
+            var lexer = new Lexer(text, fileName, filePath);
+            var res = lexer.MakeTokens();
 
             if (res.Item1 != default(Error))
-            {
                 return new Tuple<Error, Value, Dictionary<string, Value>>(res.Item1, default, default);
-            }
 
-            Parser parser = new Parser(res.Item2);
-            ParserResult parserResult = parser.Parse();
+            var parser = new Parser(res.Item2);
+            var parserResult = parser.Parse();
 
             if (parserResult.Error != default(Error))
-            {
                 return new Tuple<Error, Value, Dictionary<string, Value>>(parserResult.Error, default, default);
-            }
 
             return RunAst((ListNode)parserResult.Node, context, main);
         }
@@ -31,14 +27,11 @@ namespace IllusionScript.SDK
         public static Tuple<Error, Value, Dictionary<string, Value>> RunAst(ListNode node, Context context,
             bool main)
         {
-            if (main)
-            {
-                node.Elements.Add(new MainNode());
-            }
+            if (main) node.Elements.Add(new MainNode());
 
-            Interpreter interpreter = new Interpreter();
+            var interpreter = new Interpreter();
 
-            RuntimeResult interpreterResult = interpreter.Visit(node, context);
+            var interpreterResult = interpreter.Visit(node, context);
             return new Tuple<Error, Value, Dictionary<string, Value>>(interpreterResult.Error,
                 interpreterResult.Value, interpreter.Exports);
         }

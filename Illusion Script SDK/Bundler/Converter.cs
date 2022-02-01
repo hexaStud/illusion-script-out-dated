@@ -8,7 +8,7 @@ namespace IllusionScript.SDK.Bundler
 {
     public class Converter
     {
-        private List<BundleFile> Bundles;
+        private readonly List<BundleFile> Bundles;
 
         public Converter()
         {
@@ -17,35 +17,28 @@ namespace IllusionScript.SDK.Bundler
 
         public void Bundle(ListNode node)
         {
-            string content = node.__bundle__();
-            string hash = (DateTimeOffset.Now.ToUnixTimeMilliseconds() / 2).ToString("X");
+            var content = node.__bundle__();
+            var hash = (DateTimeOffset.Now.ToUnixTimeMilliseconds() / 2).ToString("X");
 
             PackageNode packageNode = default;
 
-            foreach (Node nodeElement in node.Elements)
-            {
+            foreach (var nodeElement in node.Elements)
                 if (nodeElement.GetType() == typeof(PackageNode))
                 {
                     packageNode = (PackageNode)nodeElement;
                     break;
                 }
-            }
 
             if (packageNode == default(PackageNode))
-            {
                 throw new Exception(
                     $"Missing package declaration in '{Path.Join(node.StartPos.Filepath, node.StartPos.FileName)}'");
-            }
 
-            string accessName = "";
-            foreach (Token token in packageNode.Names)
-            {
-                accessName += token.Value.GetAsString() + ".";
-            }
+            var accessName = "";
+            foreach (var token in packageNode.Names) accessName += token.Value.GetAsString() + ".";
 
             accessName += packageNode.StartPos.FileName;
 
-            Bundles.Add(new BundleFile()
+            Bundles.Add(new BundleFile
             {
                 Content = content,
                 Hash = hash,
@@ -55,33 +48,26 @@ namespace IllusionScript.SDK.Bundler
 
         public void WriteDown(string path, bool overwrite)
         {
-            string tmp = Path.Join(Path.GetTempPath(), "ils-" + DateTimeOffset.Now.ToUnixTimeSeconds());
-            if (Directory.Exists(tmp))
-            {
-                Directory.Delete(tmp, true);
-            }
+            var tmp = Path.Join(Path.GetTempPath(), "ils-" + DateTimeOffset.Now.ToUnixTimeSeconds());
+            if (Directory.Exists(tmp)) Directory.Delete(tmp, true);
 
             Directory.CreateDirectory(tmp);
 
             if (File.Exists(path))
             {
                 if (overwrite)
-                {
                     File.Delete(path);
-                }
                 else
-                {
                     throw new Exception(
                         $"Output file '{path}' already exists.\nSet the overwrite flag to true to overwrite");
-                }
             }
 
-            ZipArchive zipFile = ZipFile.Open(path, ZipArchiveMode.Create);
-            Dictionary<string, string> hashMap = new Dictionary<string, string>();
+            var zipFile = ZipFile.Open(path, ZipArchiveMode.Create);
+            var hashMap = new Dictionary<string, string>();
 
-            foreach (BundleFile bundleFile in Bundles)
+            foreach (var bundleFile in Bundles)
             {
-                StreamWriter stream = new StreamWriter(Path.Join(tmp, bundleFile.Hash));
+                var stream = new StreamWriter(Path.Join(tmp, bundleFile.Hash));
                 stream.Write(bundleFile.Content);
                 stream.Close();
 
@@ -89,11 +75,8 @@ namespace IllusionScript.SDK.Bundler
                 hashMap[bundleFile.AccessName] = bundleFile.Hash;
             }
 
-            StreamWriter hashMapStream = new StreamWriter(Path.Join(tmp, "hashmap"));
-            foreach (KeyValuePair<string, string> valuePair in hashMap)
-            {
-                hashMapStream.Write($"{valuePair.Key}={valuePair.Value}\n");
-            }
+            var hashMapStream = new StreamWriter(Path.Join(tmp, "hashmap"));
+            foreach (var valuePair in hashMap) hashMapStream.Write($"{valuePair.Key}={valuePair.Value}\n");
 
             hashMapStream.Close();
 
@@ -105,16 +88,16 @@ namespace IllusionScript.SDK.Bundler
 
         public static List<BundleEntry> ReadBundle(string path)
         {
-            ZipArchive zip = ZipFile.Open(path, ZipArchiveMode.Read);
-            HashMap hashMap = HashMap.GetHashMap(zip);
+            var zip = ZipFile.Open(path, ZipArchiveMode.Read);
+            var hashMap = HashMap.GetHashMap(zip);
 
-            List<BundleEntry> files = new List<BundleEntry>();
+            var files = new List<BundleEntry>();
 
-            foreach (string access in hashMap.Keys())
+            foreach (var access in hashMap.Keys())
             {
-                string content = ReadContent(hashMap[access], zip);
+                var content = ReadContent(hashMap[access], zip);
 
-                files.Add(new BundleEntry()
+                files.Add(new BundleEntry
                 {
                     AccessName = access,
                     Hash = hashMap[access],
@@ -128,17 +111,15 @@ namespace IllusionScript.SDK.Bundler
 
         private static string ReadContent(string hash, ZipArchive zip)
         {
-            ZipArchiveEntry entry = zip.GetEntry(hash);
+            var entry = zip.GetEntry(hash);
             if (entry != null)
             {
-                Stream stream = entry.Open();
-                StreamReader reader = new StreamReader(stream);
+                var stream = entry.Open();
+                var reader = new StreamReader(stream);
                 return reader.ReadToEnd();
             }
-            else
-            {
-                throw new Exception($"Cannot find {hash} in ila");
-            }
+
+            throw new Exception($"Cannot find {hash} in ila");
         }
     }
 }

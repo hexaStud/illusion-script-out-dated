@@ -2,10 +2,10 @@
 {
     public abstract class Error
     {
-        protected string Name;
         protected string Details;
-        protected Position StartPos;
         protected Position EndPos;
+        protected string Name;
+        protected Position StartPos;
 
         protected Error(string name, string details, Position startPos, Position endPos)
         {
@@ -17,7 +17,7 @@
 
         public override string ToString()
         {
-            string result = $"{Name}: {Details}\n";
+            var result = $"{Name}: {Details}\n";
             result += $"File {StartPos.FileName}, line {StartPos.Ln + 1}\n\n";
             // result += StringWithArrows();
             return result;

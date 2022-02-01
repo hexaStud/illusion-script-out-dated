@@ -14,7 +14,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            FieldValue value = new FieldValue(ContextIsolation, Name, Value);
+            var value = new FieldValue(ContextIsolation, Name, Value);
             value.SetContext(Context);
             value.SetPosition(StartPos, EndPos);
             return value;

@@ -4,8 +4,8 @@ namespace IllusionScript.SDK.Nodes
 {
     public class ConstAssignNode : Node
     {
-        public Token Token;
         public Node Node;
+        public Token Token;
 
         public ConstAssignNode(Token token, Node node) : base(token.StartPos, node.EndPos)
         {
