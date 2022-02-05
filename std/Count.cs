@@ -6,7 +6,7 @@ using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.Lib.std
 {
-    public class Count : IBuiltInFunction
+    public class Count : IBuildInFunction
     {
         public static string Name = "count";
         public List<string> Args { get; } = new List<string>() {"ele"};

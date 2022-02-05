@@ -5,8 +5,6 @@ namespace IllusionScript.SDK.Values
 {
     public class ClassValue : BaseClassValue
     {
-        public readonly ObjectValue StaticObject;
-
         public ClassValue(string name, List<ClassItemValue> fields, List<ClassItemValue> staticFields,
             BaseClassValue extends = default) : base(name, fields, staticFields, extends)
         {

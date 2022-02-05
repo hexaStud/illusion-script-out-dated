@@ -2,7 +2,7 @@
 
 namespace IllusionScript.SDK.Values.Assets
 {
-    public interface IBuiltInFunction
+    public interface IBuildInFunction
     {
         List<string> Args { get; }
 

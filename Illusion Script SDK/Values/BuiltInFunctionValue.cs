@@ -6,8 +6,8 @@ namespace IllusionScript.SDK.Values
 {
     public class BuiltInFunctionValue : BaseFunctionValue
     {
-        private static readonly Dictionary<string, IBuiltInFunction> BaseInFunctions =
-            new Dictionary<string, IBuiltInFunction>();
+        private static readonly Dictionary<string, IBuildInFunction> BaseInFunctions =
+            new Dictionary<string, IBuildInFunction>();
 
         private BuiltInFunctionValue(string name) : base(name)
         {
@@ -23,7 +23,7 @@ namespace IllusionScript.SDK.Values
                 throw NoVisitMethod(Name);
             }
 
-            IBuiltInFunction func = BaseInFunctions[Name];
+            IBuildInFunction func = BaseInFunctions[Name];
             res.Register(CheckAndPopulate(func.Args, args, context));
             if (res.ShouldReturn())
             {
@@ -62,7 +62,7 @@ namespace IllusionScript.SDK.Values
             return true;
         }
 
-        public static BuiltInFunctionValue Define(string name, IBuiltInFunction func)
+        public static BuiltInFunctionValue Define(string name, IBuildInFunction func)
         {
             BaseInFunctions[name] = func;
             return new BuiltInFunctionValue(name);

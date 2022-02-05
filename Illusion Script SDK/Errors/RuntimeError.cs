@@ -28,7 +28,7 @@ namespace IllusionScript.SDK.Errors
                 }
                 else
                 {
-                    result = $"File [Native code] <index function call>\n" + result;
+                    result = $"File [Native code] <index function>\n" + result;
                 }
 
                 pos = context.ParentEntryPos != default(Position) ? context.ParentEntryPos : default;

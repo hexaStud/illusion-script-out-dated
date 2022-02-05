@@ -669,13 +669,13 @@ namespace IllusionScript.SDK
                 return res;
             }
 
-            if (value.GetType() != typeof(ClassValue))
+            if (!value.GetType().IsSubclassOf(typeof(BaseClassValue)))
             {
                 return res.Failure(new RuntimeError(
                     $"Can only construct class not '{value.__repr__(0)}'", context, node.StartPos, node.EndPos));
             }
 
-            ClassValue classValue = (ClassValue)value;
+            BaseClassValue classValue = (BaseClassValue)value;
             value = res.Register(classValue.Construct(new List<Value>())).SetPosition(node.StartPos, node.EndPos);
             if (classValue.Constructor != default(MethodValue))
             {
@@ -813,9 +813,9 @@ namespace IllusionScript.SDK
             tokens.RemoveAt(0);
             Token start = current;
             Value variable = res.Register(Visit(new VarAccessNode(current), context));
-            if (variable.GetType() == typeof(ClassValue))
+            if (variable.GetType().IsSubclassOf(typeof(BaseClassValue)))
             {
-                ClassValue c = (ClassValue)variable;
+                BaseClassValue c = (BaseClassValue)variable;
                 variable = c.StaticObject;
             }
 
@@ -888,9 +888,9 @@ namespace IllusionScript.SDK
                     return res.Success(method);
                 }
             }
-            else if (variable.GetType() == typeof(FieldValue))
+            else if (variable.GetType() == typeof(FieldValue) || variable.GetType() == typeof(BuildInFieldValue))
             {
-                FieldValue field = (FieldValue)variable;
+                ClassItemValue field = (ClassItemValue)variable;
                 if (field.ContextIsolation.Matches(Constants.TT.KEYWORD,
                         new TokenValue(typeof(string), Constants.Keyword.PRIVATE)) && !node.Tokens[0]
                         .Matches(Constants.TT.IDENTIFIER, new TokenValue(typeof(string), Constants.Keyword.THIS)))
@@ -902,7 +902,9 @@ namespace IllusionScript.SDK
                 }
                 else
                 {
-                    return res.Success(field.Value);
+                    return res.Success(variable.GetType() == typeof(FieldValue)
+                        ? ((FieldValue)field).Value
+                        : ((BuildInFieldValue)field).Value);
                 }
             }
 
@@ -1276,10 +1278,12 @@ namespace IllusionScript.SDK
                                 new TokenValue(typeof(string), s))));
                         }
 
-                        List<Node> sendArgs = new List<Node>();
-                        sendArgs.Add(new ListNode(nodes, Position.Empty(), Position.Empty()));
-                        sendArgs.Add(new NumberNode(new Token(Constants.TT.INT,
-                            new TokenValue(typeof(int), Argv.Count.ToString()))));
+                        List<Node> sendArgs = new List<Node>
+                        {
+                            new ListNode(nodes, Position.Empty(), Position.Empty()),
+                            new NumberNode(new Token(Constants.TT.INT,
+                                new TokenValue(typeof(int), Argv.Count.ToString())))
+                        };
 
                         res.Register(Visit(new CallNode(
                             new VarAccessNode(
