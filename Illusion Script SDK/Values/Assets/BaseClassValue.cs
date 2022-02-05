@@ -5,15 +5,16 @@ namespace IllusionScript.SDK.Values.Assets
     public class BaseClassValue : Value
     {
         public string Name;
-        public List<Value> ConstructorArgs; 
-        public MethodValue Constructor;
-        
+        public List<Value> ConstructorArgs;
+        public ClassItemValue Constructor;
+
         protected BaseClassValue Extends;
         protected List<ClassItemValue> Fields;
-        protected List<ClassItemValue> StaticFields;
+        public List<ClassItemValue> StaticFields;
+        public ObjectValue StaticObject;
 
         protected BaseClassValue(string name, List<ClassItemValue> fields, List<ClassItemValue> staticFields,
-            BaseClassValue extends)
+            BaseClassValue extends = default)
         {
             ConstructorArgs = new List<Value>();
             Constructor = default;
@@ -38,9 +39,10 @@ namespace IllusionScript.SDK.Values.Assets
 
             foreach (ClassItemValue field in fields)
             {
-                if (field.Name == Name && field.GetType() == typeof(MethodValue))
+                if (field.Name == Name && field.GetType() == typeof(MethodValue) || 
+                    field.Name == Name && field.GetType() == typeof(BuildInMethodValue))
                 {
-                    Constructor = (MethodValue)field;
+                    Constructor = field;
                 }
 
                 convertedFields[field.Name] = field.Self;

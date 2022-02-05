@@ -5,7 +5,7 @@ using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.Lib.std
 {
-    public class IsInt : IBuiltInFunction
+    public class IsInt : IBuildInFunction
     {
         public static string Name = "isInt";
         public List<string> Args { get; } = new List<string>()

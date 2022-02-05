@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Illusion Script SDK\Illusion Script SDK.csproj"/>
+        <ProjectReference Include="..\Illusion Script SDK\Illusion Script SDK.csproj" />
     </ItemGroup>
 
 </Project>
