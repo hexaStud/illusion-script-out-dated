@@ -677,7 +677,7 @@ namespace IllusionScript.SDK
 
             BaseClassValue classValue = (BaseClassValue)value;
             value = res.Register(classValue.Construct(new List<Value>())).SetPosition(node.StartPos, node.EndPos);
-            if (classValue.Constructor != default(MethodValue))
+            if (classValue.Constructor != default(ClassItemValue))
             {
                 res.Register(classValue.Constructor.Execute(classValue.ConstructorArgs, value));
                 if (res.ShouldReturn())

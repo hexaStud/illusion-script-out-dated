@@ -6,7 +6,7 @@ namespace IllusionScript.SDK.Values.Assets
     {
         public string Name;
         public List<Value> ConstructorArgs;
-        public MethodValue Constructor;
+        public ClassItemValue Constructor;
 
         protected BaseClassValue Extends;
         protected List<ClassItemValue> Fields;
@@ -42,7 +42,7 @@ namespace IllusionScript.SDK.Values.Assets
                 if (field.Name == Name && field.GetType() == typeof(MethodValue) || 
                     field.Name == Name && field.GetType() == typeof(BuildInMethodValue))
                 {
-                    Constructor = (MethodValue)field;
+                    Constructor = field;
                 }
 
                 convertedFields[field.Name] = field.Self;
