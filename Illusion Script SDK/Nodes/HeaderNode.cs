@@ -1,6 +1,7 @@
 ﻿namespace IllusionScript.SDK.Nodes
 {
-    public class HeaderNode : Node
+
+    public abstract class HeaderNode : Node
     {
         public HeaderNode(Position startPos, Position endPos) : base(startPos, endPos)
         {

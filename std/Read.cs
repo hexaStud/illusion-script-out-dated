@@ -6,7 +6,7 @@ using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.Lib.std
 {
-    public class Read : IBuiltInFunction
+    public class Read : IBuildInFunction
     {
         public static string Name = "read";
         public List<string> Args { get; } = new List<string>();

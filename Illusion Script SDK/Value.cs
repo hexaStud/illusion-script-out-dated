@@ -132,5 +132,10 @@ namespace IllusionScript.SDK
         {
             return "";
         }
+
+        public virtual bool IsBuiltIn()
+        {
+            return false;
+        }
     }
 }

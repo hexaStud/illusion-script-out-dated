@@ -5,5 +5,5 @@
         <RootNamespace>IllusionScript.SDK</RootNamespace>
         <AssemblyName>ils.sdk</AssemblyName>
     </PropertyGroup>
-    
+
 </Project>

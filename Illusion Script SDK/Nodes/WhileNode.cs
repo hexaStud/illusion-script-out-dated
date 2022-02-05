@@ -1,4 +1,6 @@
-﻿namespace IllusionScript.SDK.Nodes
+﻿using IllusionScript.SDK.Bundler;
+
+namespace IllusionScript.SDK.Nodes
 {
     public class WhileNode : Node
     {
@@ -16,6 +18,24 @@
         public override string __repr__()
         {
             return "";
+        }
+
+        public override string __bundle__()
+        {
+            return "{" +
+                   $"\"type\": \"WhileNode\", \"condition\": {Condition.__bundle__()}, \"body\": {Body.__bundle__()}, \"shouldReturnNull\": {ShouldReturnNull.ToString().ToLower()}" +
+                   "}";
+        }
+
+        public override Node __unbundle__(Json json)
+        {
+            Condition = ConvertNode(json.Get("condition"));
+            Body = ConvertNode(json.Get("body"));
+            ShouldReturnNull = json.GetAsBool("shouldReturnNull");
+
+            StartPos = Position.Convert(json.Get("startPos"));
+            EndPos = Position.Convert(json.Get("endPos"));
+            return this;
         }
     }
 }

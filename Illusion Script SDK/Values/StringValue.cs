@@ -8,7 +8,7 @@ namespace IllusionScript.SDK.Values
     {
         public TokenValue Value;
 
-        public StringValue(TokenValue value) : base()
+        public StringValue(TokenValue value)
         {
             Value = value;
         }

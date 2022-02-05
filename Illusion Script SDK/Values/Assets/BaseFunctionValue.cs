@@ -18,8 +18,10 @@ namespace IllusionScript.SDK.Values.Assets
 
         protected Context GenerateNewContext()
         {
-            Context context = new Context(Name, Context, StartPos);
-            context.SymbolTable = new SymbolTable(Context.SymbolTable);
+            Context context = new Context(Name, Context, StartPos)
+            {
+                SymbolTable = new SymbolTable(Context.SymbolTable)
+            };
             return context;
         }
 

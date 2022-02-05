@@ -5,13 +5,11 @@ namespace IllusionScript
 {
     public class InIFile
     {
-        private readonly string Path;
         private readonly string[] Lines;
 
         public InIFile(string path)
         {
-            Path = path;
-            string[] lines = File.ReadAllLines(Path);
+            string[] lines = File.ReadAllLines(path);
             List<string> list = new List<string>();
             foreach (string line in lines)
             {

@@ -28,14 +28,14 @@ namespace IllusionScript.SDK.Errors
                 }
                 else
                 {
-                    result = $"File [Native code] <index function call>\n" + result;
+                    result = $"File [Native code] <index function>\n" + result;
                 }
 
                 pos = context.ParentEntryPos != default(Position) ? context.ParentEntryPos : default;
                 context = Context.Parent != default(Context) ? context.Parent : default;
             }
 
-            return $"Traceback (most recent call last)\n {result}";
+            return $"Traceback (most recent call last)\n{result}";
         }
 
         public override string ToString()

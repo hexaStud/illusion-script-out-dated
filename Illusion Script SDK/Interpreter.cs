@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
+using IllusionScript.SDK.Bundler;
 using IllusionScript.SDK.Errors;
 using IllusionScript.SDK.Nodes;
 using IllusionScript.SDK.Nodes.Assets;
@@ -12,7 +13,8 @@ namespace IllusionScript.SDK
 {
     public class Interpreter
     {
-        public static List<string> Argv = new List<string>();
+        public static List<string> Argv = new();
+        public static MemoryCash MemoryCash = new();
         public Dictionary<string, Value> Exports;
 
         public Interpreter()
@@ -76,6 +78,10 @@ namespace IllusionScript.SDK
                     return VisitBreakNode((BreakNode)node, context);
                 case "ImportNode":
                     return VisitImportNode((ImportNode)node, context);
+                case "UseNode":
+                    return VisitUseNode((UseNode)node, context);
+                case "PackageNode":
+                    return VisitPackageNode((PackageNode)node, context);
                 case "HeadIfNode":
                     return VisitHeadIfNode((HeadIfNode)node, context);
                 case "ExportNode":
@@ -275,7 +281,12 @@ namespace IllusionScript.SDK
             }
 
             Value value = symbolTableValue.Value;
-            value = value.Copy().SetContext(context).SetPosition(node.StartPos, node.EndPos);
+            value = value.Copy();
+            if (value.IsBuiltIn())
+            {
+                value.SetContext(context).SetPosition(node.StartPos, node.EndPos);
+            }
+
             return res.Success(value);
         }
 
@@ -445,8 +456,10 @@ namespace IllusionScript.SDK
                 context.SymbolTable.Set(node.VarName.Value.GetAsString(),
                     new NumberValue(new TokenValue(iStr.Contains(".") ? typeof(float) : typeof(int), iStr)));
                 i += stepValue.Value.GetAsFloat();
-                Context newContext = new Context("Loop[For]", context, node.StartPos);
-                newContext.SymbolTable = new SymbolTable(context.SymbolTable);
+                Context newContext = new Context("Loop[For]", context, node.StartPos)
+                {
+                    SymbolTable = new SymbolTable(context.SymbolTable)
+                };
                 Value value = res.Register(Visit(node.Body, newContext));
                 if (res.ShouldReturn())
                 {
@@ -489,8 +502,10 @@ namespace IllusionScript.SDK
                     break;
                 }
 
-                Context newContext = new Context("Loop[While]", context, node.StartPos);
-                newContext.SymbolTable = new SymbolTable(context.SymbolTable);
+                Context newContext = new Context("Loop[While]", context, node.StartPos)
+                {
+                    SymbolTable = new SymbolTable(context.SymbolTable)
+                };
                 Value value = res.Register(Visit(node.Body, newContext));
                 if (res.ShouldReturn())
                 {
@@ -654,19 +669,16 @@ namespace IllusionScript.SDK
                 return res;
             }
 
-            if (value.GetType() != typeof(ClassValue))
+            if (!value.GetType().IsSubclassOf(typeof(BaseClassValue)))
             {
                 return res.Failure(new RuntimeError(
                     $"Can only construct class not '{value.__repr__(0)}'", context, node.StartPos, node.EndPos));
             }
 
-            ClassValue classValue = (ClassValue)value;
+            BaseClassValue classValue = (BaseClassValue)value;
             value = res.Register(classValue.Construct(new List<Value>())).SetPosition(node.StartPos, node.EndPos);
             if (classValue.Constructor != default(MethodValue))
             {
-                Context constructorContext = new Context($"<class {classValue.Name}>", context, classValue.StartPos);
-                constructorContext.SymbolTable = new SymbolTable(context.SymbolTable);
-
                 res.Register(classValue.Constructor.Execute(classValue.ConstructorArgs, value));
                 if (res.ShouldReturn())
                 {
@@ -801,9 +813,9 @@ namespace IllusionScript.SDK
             tokens.RemoveAt(0);
             Token start = current;
             Value variable = res.Register(Visit(new VarAccessNode(current), context));
-            if (variable.GetType() == typeof(ClassValue))
+            if (variable.GetType().IsSubclassOf(typeof(BaseClassValue)))
             {
-                ClassValue c = (ClassValue)variable;
+                BaseClassValue c = (BaseClassValue)variable;
                 variable = c.StaticObject;
             }
 
@@ -876,9 +888,9 @@ namespace IllusionScript.SDK
                     return res.Success(method);
                 }
             }
-            else if (variable.GetType() == typeof(FieldValue))
+            else if (variable.GetType() == typeof(FieldValue) || variable.GetType() == typeof(BuildInFieldValue))
             {
-                FieldValue field = (FieldValue)variable;
+                ClassItemValue field = (ClassItemValue)variable;
                 if (field.ContextIsolation.Matches(Constants.TT.KEYWORD,
                         new TokenValue(typeof(string), Constants.Keyword.PRIVATE)) && !node.Tokens[0]
                         .Matches(Constants.TT.IDENTIFIER, new TokenValue(typeof(string), Constants.Keyword.THIS)))
@@ -890,7 +902,9 @@ namespace IllusionScript.SDK
                 }
                 else
                 {
-                    return res.Success(field.Value);
+                    return res.Success(variable.GetType() == typeof(FieldValue)
+                        ? ((FieldValue)field).Value
+                        : ((BuildInFieldValue)field).Value);
                 }
             }
 
@@ -1052,23 +1066,41 @@ namespace IllusionScript.SDK
                 value = Path.Join(node.StartPos.Filepath, value);
                 try
                 {
-                    string data = File.ReadAllText(value);
+                    string data;
+                    if (MemoryCash.Exists(value, MemoryCash.FILE))
+                    {
+                        data = MemoryCash.Get(value).Content;
+                    }
+                    else
+                    {
+                        data = File.ReadAllText(value);
+                        MemoryCash.Set(value, data);
+                    }
+
                     FileInfo fileInfo = new FileInfo(value);
-                    Context importContext = new Context("<@import>");
-                    importContext.SymbolTable = new SymbolTable();
+                    SymbolTable copySymbolTable = SymbolTable.GlobalSymbols;
+                    SymbolTable.GlobalSymbols = new SymbolTable();
+                    Context importContext = new Context("<@import>")
+                    {
+                        SymbolTable = SymbolTable.GlobalSymbols
+                    };
+
                     Tuple<Error, Value, Dictionary<string, Value>> res = Executor.Run(data, fileInfo.Name,
-                        fileInfo.DirectoryName, importContext);
+                        fileInfo.DirectoryName, importContext, true);
                     if (res.Item1 != default(Error))
                     {
                         return new RuntimeResult().Failure(res.Item1);
                     }
 
-                    if (res.Item3 != default(Dictionary<string, Value>))
+                    if (res.Item3 == default(Dictionary<string, Value>))
                     {
-                        foreach (KeyValuePair<string, Value> functionValue in res.Item3)
-                        {
-                            SymbolTable.GlobalSymbols.Set(functionValue.Key, functionValue.Value);
-                        }
+                        return new RuntimeResult().Success(NumberValue.Null);
+                    }
+
+                    SymbolTable.GlobalSymbols = copySymbolTable;
+                    foreach (KeyValuePair<string, Value> functionValue in res.Item3)
+                    {
+                        SymbolTable.GlobalSymbols.Set(functionValue.Key, functionValue.Value);
                     }
 
                     return new RuntimeResult().Success(NumberValue.Null);
@@ -1076,22 +1108,88 @@ namespace IllusionScript.SDK
                 catch (IOException err)
                 {
                     return new RuntimeResult().Failure(new RuntimeError(
-                        $"Failed to load script {value}\n\n {err.Message}", context, node.StartPos, node.EndPos));
+                        $"Failed to load script {value}\n\n{err.Message}", context, node.StartPos, node.EndPos));
                 }
             }
             else
             {
                 if (PluginLoader.Exists(value))
                 {
-                    PluginLoader.Bind(value, context.SymbolTable);
+                    PluginLoader.Bind(value, SymbolTable.GlobalSymbols);
+                }
+                else if (MemoryCash.Exists(value, MemoryCash.AST))
+                {
+                    SymbolTable copySymbolTable = SymbolTable.GlobalSymbols;
+                    SymbolTable.GlobalSymbols = new SymbolTable();
+                    Context importContext = new Context("<@import>")
+                    {
+                        SymbolTable = SymbolTable.GlobalSymbols
+                    };
+                    Tuple<Error, Value, Dictionary<string, Value>> res =
+                        Executor.RunAst((ListNode)MemoryCash.Get(value).Node, importContext, false);
+                    if (res.Item1 != default(Error))
+                    {
+                        return new RuntimeResult().Failure(res.Item1);
+                    }
+
+                    if (res.Item3 == default(Dictionary<string, Value>))
+                    {
+                        return new RuntimeResult().Success(NumberValue.Null);
+                    }
+
+                    SymbolTable.GlobalSymbols = copySymbolTable;
+                    foreach (KeyValuePair<string, Value> functionValue in res.Item3)
+                    {
+                        SymbolTable.GlobalSymbols.Set(functionValue.Key, functionValue.Value);
+                    }
+
+                    return new RuntimeResult().Success(NumberValue.Null);
                 }
                 else
                 {
-                    return new RuntimeResult().Failure(new RuntimeError($"'{value}' is not a file or module", context,
+                    return new RuntimeResult().Failure(new RuntimeError(
+                        $"'{value}' is not a file or module or exists in a bundle", context,
                         node.StartPos, node.EndPos));
                 }
             }
 
+            return new RuntimeResult().Success(NumberValue.Null);
+        }
+
+        private RuntimeResult VisitUseNode(UseNode node, Context context)
+        {
+            string value = node.Module.Value.GetAsString();
+
+            if (value.StartsWith("."))
+            {
+                value = Path.Join(node.StartPos.Filepath, value);
+                try
+                {
+                    List<BundleEntry> files = Converter.ReadBundle(value);
+                    foreach (BundleEntry file in files)
+                    {
+                        Node ast = Node.ConvertNode(file.RawNode);
+                        MemoryCash.Set(file.AccessName, ast);
+                    }
+
+                    return new RuntimeResult().Success(NumberValue.Null);
+                }
+                catch (IOException err)
+                {
+                    return new RuntimeResult().Failure(new RuntimeError(
+                        $"Failed to load bundle {Extensions.Path.Join(value)}\n\n{err.Message}", context, node.StartPos,
+                        node.EndPos));
+                }
+            }
+            else
+            {
+                return new RuntimeResult().Failure(new RuntimeError("Path must begin with a dot", context,
+                    node.StartPos, node.EndPos));
+            }
+        }
+
+        private RuntimeResult VisitPackageNode(PackageNode node, Context context)
+        {
             return new RuntimeResult().Success(NumberValue.Null);
         }
 
@@ -1180,10 +1278,12 @@ namespace IllusionScript.SDK
                                 new TokenValue(typeof(string), s))));
                         }
 
-                        List<Node> sendArgs = new List<Node>();
-                        sendArgs.Add(new ListNode(nodes, Position.Empty(), Position.Empty()));
-                        sendArgs.Add(new NumberNode(new Token(Constants.TT.INT,
-                            new TokenValue(typeof(int), Argv.Count.ToString()))));
+                        List<Node> sendArgs = new List<Node>
+                        {
+                            new ListNode(nodes, Position.Empty(), Position.Empty()),
+                            new NumberNode(new Token(Constants.TT.INT,
+                                new TokenValue(typeof(int), Argv.Count.ToString())))
+                        };
 
                         res.Register(Visit(new CallNode(
                             new VarAccessNode(

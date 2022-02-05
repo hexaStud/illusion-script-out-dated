@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.NetworkInformation;
 using IllusionScript.SDK.Errors;
 
 namespace IllusionScript.SDK.Values
@@ -8,7 +7,7 @@ namespace IllusionScript.SDK.Values
     {
         public TokenValue Value;
 
-        public NumberValue(TokenValue value) : base()
+        public NumberValue(TokenValue value)
         {
             Value = value;
         }
@@ -284,7 +283,7 @@ namespace IllusionScript.SDK.Values
 
         public override Tuple<Error, Value> Notted()
         {
-            return Value.GetAsFloat() == 1
+            return Value.GetAsFloat() == 1F
                 ? new Tuple<Error, Value>(default, True.Copy().SetContext(Context))
                 : new Tuple<Error, Value>(default, False.SetContext(Context));
         }

@@ -1,0 +1,11 @@
+﻿<ils> = Path to ils executable
+<flags> = -d | -r
+<args> = Program arguments
+<file path> = Path of the file relative path starts with '.'
+<index package> = The file with his package name to be executed as main file
+<config path> = Path to the config file for the bundler
+
+(Run Shell) <ils> <flags>
+(Run File) <ils> <flags> -f <file path> <args>
+(Run Bundle) <ils> <flags> -a <file path> <index package> <args>
+(Compile files) <ils> <flags> -c <config path>

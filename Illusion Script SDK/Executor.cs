@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using IllusionScript.SDK.Nodes;
-using IllusionScript.SDK.Values;
 
 namespace IllusionScript.SDK
 {
     public static class Executor
     {
         public static Tuple<Error, Value, Dictionary<string, Value>> Run(string text, string fileName,
-            string filePath, Context context,
-            bool main = false)
+            string filePath, Context context, bool main = false)
         {
             Lexer lexer = new Lexer(text, fileName, filePath);
             Tuple<Error, List<Token>> res = lexer.MakeTokens();
@@ -27,13 +25,19 @@ namespace IllusionScript.SDK
                 return new Tuple<Error, Value, Dictionary<string, Value>>(parserResult.Error, default, default);
             }
 
-            ListNode node = (ListNode) parserResult.Node;
+            return RunAst((ListNode)parserResult.Node, context, main);
+        }
+
+        public static Tuple<Error, Value, Dictionary<string, Value>> RunAst(ListNode node, Context context,
+            bool main)
+        {
             if (main)
             {
                 node.Elements.Add(new MainNode());
             }
 
             Interpreter interpreter = new Interpreter();
+
             RuntimeResult interpreterResult = interpreter.Visit(node, context);
             return new Tuple<Error, Value, Dictionary<string, Value>>(interpreterResult.Error,
                 interpreterResult.Value, interpreter.Exports);

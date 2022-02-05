@@ -10,6 +10,7 @@ namespace IllusionScript.Lib.system
 
         public void Load(SymbolTable table)
         {
+            table.Set(Application.ClassName, BuildInClassValue.Define(Application.ClassName, new Application()));
         }
     }
 }
