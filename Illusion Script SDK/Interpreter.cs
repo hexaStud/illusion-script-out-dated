@@ -411,7 +411,7 @@ namespace IllusionScript.SDK
         private RuntimeResult VisitForNode(ForNode node, Context context)
         {
             RuntimeResult res = new RuntimeResult();
-            List<Value> elements = new List<Value>();
+            Dictionary<string, Value> elements = new Dictionary<string, Value>();
 
             NumberValue startValue = (NumberValue)res.Register(Visit(node.StartValue, context));
             if (res.ShouldReturn())
@@ -443,6 +443,8 @@ namespace IllusionScript.SDK
             {
                 condition = x => x < endValue.Value.GetAsFloat();
             }
+
+            int elementsIndex = 0;
 
             while (condition(i))
             {
@@ -476,7 +478,8 @@ namespace IllusionScript.SDK
                     break;
                 }
 
-                elements.Add(value);
+                elements.Add(elementsIndex.ToString(), value);
+                elementsIndex++;
             }
 
             return res.Success(node.ShouldReturnNull
@@ -487,8 +490,8 @@ namespace IllusionScript.SDK
         private RuntimeResult VisitWhileNode(WhileNode node, Context context)
         {
             RuntimeResult res = new RuntimeResult();
-            List<Value> elements = new List<Value>();
-
+            Dictionary<string, Value> elements = new Dictionary<string, Value>();
+            int elementIndex = 0;
             while (true)
             {
                 Value condition = res.Register(Visit(node.Condition, context));
@@ -522,7 +525,8 @@ namespace IllusionScript.SDK
                     break;
                 }
 
-                elements.Add(value);
+                elements.Add(elementIndex.ToString(), value);
+                elementIndex++;
             }
 
             return res.Success(node.ShouldReturnNull
@@ -775,10 +779,12 @@ namespace IllusionScript.SDK
         private RuntimeResult VisitListNode(ListNode node, Context context)
         {
             RuntimeResult res = new RuntimeResult();
-            List<Value> elements = new List<Value>();
-            foreach (Node nodeElement in node.Elements)
+            Dictionary<string, Value> elements = new Dictionary<string, Value>();
+            for (int i = 0; i < node.Elements.Count; i++)
             {
-                elements.Add(res.Register(Visit(nodeElement, context)));
+                Node nodeElement = node.Elements[i];
+
+                elements.Add(i.ToString(), res.Register(Visit(nodeElement, context)));
                 if (res.ShouldReturn())
                 {
                     return res;
@@ -813,16 +819,12 @@ namespace IllusionScript.SDK
             tokens.RemoveAt(0);
             Token start = current;
             Value variable = res.Register(Visit(new VarAccessNode(current), context));
-            if (variable.GetType().IsSubclassOf(typeof(BaseClassValue)))
-            {
-                BaseClassValue c = (BaseClassValue)variable;
-                variable = c.StaticObject;
-            }
-
             if (res.ShouldReturn())
             {
                 return res;
             }
+
+            variable = variable.ObjectAccess();
 
             if (tokens.Count != 0)
             {
@@ -845,21 +847,30 @@ namespace IllusionScript.SDK
                     }
                     else if (variable.GetType() == typeof(ListValue))
                     {
-                        if (current.Type != Constants.TT.INT)
+                        if (current.Type != Constants.TT.INT && current.Type != Constants.TT.IDENTIFIER)
                         {
                             return res.Failure(new RuntimeError("Expected int", context, node.StartPos, node.EndPos));
                         }
 
                         ListValue rr = (ListValue)variable;
-
-                        int index = current.Value.GetAsInt();
-                        if (index < 0 || index > rr.Elements.Count - 1)
+                        string access;
+                        if (current.Type == Constants.TT.INT)
                         {
-                            return res.Failure(new RuntimeError("Int is out of bounds of the list", context,
-                                node.StartPos, node.EndPos));
+                            int index = current.Value.GetAsInt();
+                            if (index < 0 || index > rr.Elements.Count - 1)
+                            {
+                                return res.Failure(new RuntimeError("Int is out of bounds of the list", context,
+                                    node.StartPos, node.EndPos));
+                            }
+
+                            access = index.ToString();
+                        }
+                        else
+                        {
+                            access = current.Value.GetAsString();
                         }
 
-                        variable = rr.Elements[index];
+                        variable = rr.Elements[access];
                     }
 
                     if (tokens.Count != 0 && variable.GetType() != typeof(ObjectValue) &&
@@ -967,7 +978,7 @@ namespace IllusionScript.SDK
                     stack.Add(new KeyValuePair<Token, Value>(current, variable));
                     if (tokens.Count != 0)
                     {
-                        variable = rr.Elements[index];
+                        variable = rr.Elements[index.ToString()];
                     }
                 }
 
@@ -1004,7 +1015,7 @@ namespace IllusionScript.SDK
                 else if (part.Value.GetType() == typeof(ListValue))
                 {
                     ListValue rr = (ListValue)part.Value;
-                    rr.Elements[part.Key.Value.GetAsInt()] = variable;
+                    rr.Elements[part.Key.Value.GetAsString()] = variable;
                     replace = rr;
                 }
 

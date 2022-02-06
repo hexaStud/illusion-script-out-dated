@@ -1031,7 +1031,7 @@ namespace IllusionScript.SDK
                 if (!CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.END)))
                 {
                     return res.Failure(new InvalidSyntaxError(
-                        "Expected 'el'", CurrentToken.StartPos, CurrentToken.EndPos));
+                        "Expected 'end'", CurrentToken.StartPos, CurrentToken.EndPos));
                 }
 
                 res.RegisterAdvancement();
@@ -1102,7 +1102,7 @@ namespace IllusionScript.SDK
                 return res;
             }
 
-            Node stepValue = default;
+            Node stepValue;
             if (CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.STEP)))
             {
                 res.RegisterAdvancement();
@@ -1113,6 +1113,10 @@ namespace IllusionScript.SDK
                 {
                     return res;
                 }
+            }
+            else
+            {
+                stepValue = new NumberNode(new Token(Constants.TT.INT, new TokenValue(typeof(int), "1"), Position.Empty(), Position.Empty()));
             }
 
             if (!CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.THEN)))
@@ -1138,7 +1142,7 @@ namespace IllusionScript.SDK
                 if (!CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.END)))
                 {
                     return res.Failure(new InvalidSyntaxError(
-                        "Expected 'el'", CurrentToken.StartPos, CurrentToken.EndPos));
+                        "Expected 'end'", CurrentToken.StartPos, CurrentToken.EndPos));
                 }
 
                 res.RegisterAdvancement();
@@ -1265,7 +1269,7 @@ namespace IllusionScript.SDK
 
             if (!CurrentToken.Matches(Constants.TT.KEYWORD, new TokenValue(typeof(string), Constants.Keyword.END)))
             {
-                return res.Failure(new InvalidSyntaxError("Expected 'el'", CurrentToken.StartPos, CurrentToken.EndPos));
+                return res.Failure(new InvalidSyntaxError("Expected 'end'", CurrentToken.StartPos, CurrentToken.EndPos));
             }
 
             res.RegisterAdvancement();

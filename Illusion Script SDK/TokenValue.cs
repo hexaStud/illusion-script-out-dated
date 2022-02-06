@@ -46,6 +46,11 @@ namespace IllusionScript.SDK
 
         public float GetAsFloat()
         {
+            if (Type == typeof(int))
+            {
+                return (float)GetAsInt();
+            }
+            
             if (!float.TryParse(Value, out float value))
             {
                 throw new Exception($"Cannot convert '{Value}' to float");

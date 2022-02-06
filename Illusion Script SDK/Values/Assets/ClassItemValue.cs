@@ -31,7 +31,7 @@ namespace IllusionScript.SDK.Values.Assets
             if (args.Count < argsName.Count)
             {
                 return res.Failure(new RuntimeError(
-                    $"{argsName.Count - args.Count} too many args passed into '{Name}'", Context, StartPos, EndPos));
+                    $"{argsName.Count - args.Count} too few args passed into '{Name}'", Context, StartPos, EndPos));
             }
 
             if (args.Count > argsName.Count)

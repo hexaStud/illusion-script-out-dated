@@ -6,6 +6,6 @@ namespace IllusionScript.SDK.Values.Assets
     {
         List<string> Args { get; }
 
-        RuntimeResult Exec(Context context, BuiltInFunctionValue self);
+        RuntimeResult Exec(Context context, BuildInFunctionValue self);
     }
 }

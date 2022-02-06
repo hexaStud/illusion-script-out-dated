@@ -11,7 +11,7 @@ namespace IllusionScript.Lib.std
         public static string Name = "println";
         public List<string> Args { get; } = new List<string>() { "x" };
 
-        public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
+        public RuntimeResult Exec(Context context, BuildInFunctionValue self)
         {
             Value x = context.SymbolTable.Get("x").Value;
 

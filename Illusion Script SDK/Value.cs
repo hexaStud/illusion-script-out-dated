@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using IllusionScript.SDK.Errors;
+using IllusionScript.SDK.Values;
 
 namespace IllusionScript.SDK
 {
@@ -106,6 +107,13 @@ namespace IllusionScript.SDK
         public virtual RuntimeResult Construct(List<Value> args)
         {
             return new RuntimeResult().Failure(IllegalOperation());
+        }
+
+        public virtual Value ObjectAccess()
+        {
+            ObjectValue value = new ObjectValue(new Dictionary<string, Value>());
+            value.SetContext(Context).SetPosition(StartPos, EndPos);
+            return value;
         }
 
         public virtual bool IsTrue()
