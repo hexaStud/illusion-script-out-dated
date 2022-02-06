@@ -9,11 +9,11 @@ namespace IllusionScript.SDK.Plugin
     public static class PluginLoader
     {
         public static List<string> Assemblies = new List<string>();
-        public static List<IModule> Plugins = new List<IModule>();
+        public static List<PluginItem> Plugins = new List<PluginItem>();
 
         public static void LoadPlugins()
         {
-            Plugins = new List<IModule>();
+            Plugins = new List<PluginItem>();
             foreach (string assembly in Assemblies)
             {
                 if (File.Exists(assembly) && assembly.EndsWith(".dll"))
@@ -30,15 +30,19 @@ namespace IllusionScript.SDK.Plugin
 
             foreach (Type type in types)
             {
-                Plugins.Add((IModule)Activator.CreateInstance(type));
+                Plugins.Add(new PluginItem()
+                {
+                    Module = (IModule)Activator.CreateInstance(type),
+                    Assembly = type.Assembly.Location
+                });
             }
         }
 
         public static bool Exists(string name)
         {
-            foreach (IModule plugin in Plugins)
+            foreach (PluginItem plugin in Plugins)
             {
-                if (plugin.Name == name)
+                if (plugin.Module.Name == name)
                 {
                     return true;
                 }
@@ -49,15 +53,31 @@ namespace IllusionScript.SDK.Plugin
 
         public static void Bind(string name, SymbolTable symbolTable)
         {
-            foreach (IModule plugin in Plugins)
+            foreach (PluginItem plugin in Plugins)
             {
-                if (plugin.Name != name)
+                if (plugin.Module.Name != name)
                 {
                     continue;
                 }
-                plugin.Load(symbolTable);
+
+                plugin.Module.Load(symbolTable);
                 break;
             }
+        }
+
+        public static List<PluginItem> GetAllPlugins(string path)
+        {
+            path = SDK.Extensions.Path.Join(path);
+            List<PluginItem> pluginItems = new List<PluginItem>();
+            foreach (PluginItem pluginItem in Plugins)
+            {
+                if (pluginItem.Assembly == path)
+                {
+                    pluginItems.Add(pluginItem);
+                }
+            }
+
+            return pluginItems;
         }
     }
 }

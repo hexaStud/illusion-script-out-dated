@@ -83,22 +83,24 @@ namespace IllusionScript
 
             if (interpreterArgs.Contains("-d"))
             {
-                for (int i = 0; i < PluginLoader.Assemblies.Count; i++)
+                foreach (string t in PluginLoader.Assemblies)
                 {
-                    Console.WriteLine(PluginLoader.Assemblies[i].Replace("/", "\\"));
-                    IModule plugin = PluginLoader.Plugins[i];
-                    SymbolTable fake = new SymbolTable();
-                    Console.WriteLine($"[{plugin.Name}]");
-                    plugin.Load(fake);
-                    foreach (string key in fake.GetKeys())
+                    Console.WriteLine(t.Replace("/", "\\"));
+                    foreach (PluginItem plugin in PluginLoader.GetAllPlugins(t))
                     {
-                        Console.WriteLine($"> {key}");
+                        SymbolTable fake = new SymbolTable();
+                        Console.WriteLine($"[{plugin.Module.Name}]");
+                        plugin.Module.Load(fake);
+                        foreach (string key in fake.GetKeys())
+                        {
+                            Console.WriteLine($"> {key}");
+                        }
+                        
+                        Console.WriteLine("");
                     }
-
-                    Console.WriteLine(" ");
                 }
 
-                Console.WriteLine(" ");
+                Console.WriteLine("");
             }
 
             Interpreter.Argv = programArgs;
