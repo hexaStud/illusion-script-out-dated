@@ -28,21 +28,12 @@
     <!-- Extensions -->
 
     <ItemGroup>
-        <ProjectReference Include="..\std\std.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        </ProjectReference>
-        <ProjectReference Include="..\os\os.csproj">
-            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-        </ProjectReference>
         <ProjectReference Include="..\system\system.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
         </ProjectReference>
     </ItemGroup>
 
     <Target Name="Libs" AfterTargets="AfterBuild">
-        <Message Text="Copy Libaries ..." />
-        <Copy SourceFiles="../std/bin/Debug/net5.0/std.dll" DestinationFolder="$(OutDir)/ext/" />
-        <Copy SourceFiles="../os/bin/Debug/net5.0/os.dll" DestinationFolder="$(OutDir)/ext/" />
         <Copy SourceFiles="../system/bin/Debug/net5.0/system.dll" DestinationFolder="$(OutDir)/ext/" />
     </Target>
 

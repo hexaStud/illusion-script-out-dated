@@ -3,7 +3,7 @@ using IllusionScript.SDK;
 using IllusionScript.SDK.Plugin;
 using IllusionScript.SDK.Values;
 
-namespace IllusionScript.Lib.os
+namespace IllusionScript.Lib.system.os
 {
     public class Main : IModule
     {

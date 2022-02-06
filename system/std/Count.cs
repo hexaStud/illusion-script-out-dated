@@ -4,7 +4,7 @@ using IllusionScript.SDK.Errors;
 using IllusionScript.SDK.Values;
 using IllusionScript.SDK.Values.Assets;
 
-namespace IllusionScript.Lib.std
+namespace IllusionScript.Lib.system.std
 {
     public class Count : IBuildInFunction
     {

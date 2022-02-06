@@ -3,22 +3,21 @@ using IllusionScript.SDK;
 using IllusionScript.SDK.Values;
 using IllusionScript.SDK.Values.Assets;
 
-namespace IllusionScript.Lib.std
+namespace IllusionScript.Lib.system.std
 {
-    public class IsList : IBuildInFunction
+    public class IsString : IBuildInFunction
     {
-        public static string Name = "isList";
+        public static string Name = "isString";
         
         public List<string> Args { get; } = new List<string>()
         {
             "ele"
         };
-
         public RuntimeResult Exec(Context context, BuildInFunctionValue self)
         {
             Value ele = context.SymbolTable.Get("ele").Value;
 
-            return new RuntimeResult().Success(ele.GetType() == typeof(ListValue)
+            return new RuntimeResult().Success(ele.GetType() == typeof(StringValue)
                 ? NumberValue.True
                 : NumberValue.False);
         }
