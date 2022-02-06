@@ -13,7 +13,7 @@ namespace IllusionScript.Lib.std
         {
             "ele"
         };
-        public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
+        public RuntimeResult Exec(Context context, BuildInFunctionValue self)
         {
             Value ele = context.SymbolTable.Get("ele").Value;
 

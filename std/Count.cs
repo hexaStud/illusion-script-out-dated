@@ -11,7 +11,7 @@ namespace IllusionScript.Lib.std
         public static string Name = "count";
         public List<string> Args { get; } = new List<string>() {"ele"};
 
-        public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
+        public RuntimeResult Exec(Context context, BuildInFunctionValue self)
         {
             Value ele = context.SymbolTable.Get("ele").Value;
             int count = 0;

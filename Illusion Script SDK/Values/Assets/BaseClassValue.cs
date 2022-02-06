@@ -92,5 +92,10 @@ namespace IllusionScript.SDK.Values.Assets
 
             return constructor;
         }
+
+        public override ObjectValue ObjectAccess()
+        {
+            return StaticObject;
+        }
     }
 }

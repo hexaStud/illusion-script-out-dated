@@ -133,7 +133,7 @@ namespace IllusionScript
                     string path;
                     i++;
 
-                    if (arg.StartsWith("."))
+                    if (interpreterArgs[i].StartsWith("."))
                     {
                         path = Path.Join(Directory.GetCurrentDirectory(), interpreterArgs[i]);
                     }
@@ -299,6 +299,7 @@ namespace IllusionScript
                 throw new Exception("Cannot bundle zero files");
             }
 
+            Console.WriteLine($"Config: {SDK.Extensions.Path.Join(conf)}");
             Console.WriteLine($"Output: {target}");
             Console.WriteLine($"Name: {name}");
             Console.WriteLine("\nFiles:");
@@ -307,7 +308,7 @@ namespace IllusionScript
                 Console.WriteLine("> " + s.Replace("/", "\\"));
             }
 
-            Console.WriteLine("\n");
+            Console.WriteLine("");
 
             Converter converter = new Converter();
 
@@ -379,7 +380,7 @@ namespace IllusionScript
                         Console.Write(Constants.EOL);
                         if (list.Elements.Count == 1)
                         {
-                            Console.Write(list.Elements[0].__repr__(0));
+                            Console.Write(list.Elements["0"].__repr__(0));
                         }
                         else
                         {

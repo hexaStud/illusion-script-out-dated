@@ -4,12 +4,12 @@ using IllusionScript.SDK.Values.Assets;
 
 namespace IllusionScript.SDK.Values
 {
-    public class BuiltInFunctionValue : BaseFunctionValue
+    public class BuildInFunctionValue : BaseFunctionValue
     {
         private static readonly Dictionary<string, IBuildInFunction> BaseInFunctions =
             new Dictionary<string, IBuildInFunction>();
 
-        private BuiltInFunctionValue(string name) : base(name)
+        private BuildInFunctionValue(string name) : base(name)
         {
         }
 
@@ -29,6 +29,11 @@ namespace IllusionScript.SDK.Values
             {
                 return res;
             }
+            
+            if (self != default(Value))
+            {
+                context.SymbolTable.Set("this", self);
+            }
 
             Value returnValue = res.Register(func.Exec(context, this));
             if (res.ShouldReturn())
@@ -46,7 +51,7 @@ namespace IllusionScript.SDK.Values
 
         public override Value Copy()
         {
-            BuiltInFunctionValue copy = new BuiltInFunctionValue(Name);
+            BuildInFunctionValue copy = new BuildInFunctionValue(Name);
             copy.SetContext(Context);
             copy.SetPosition(StartPos, EndPos);
             return copy;
@@ -62,10 +67,10 @@ namespace IllusionScript.SDK.Values
             return true;
         }
 
-        public static BuiltInFunctionValue Define(string name, IBuildInFunction func)
+        public static BuildInFunctionValue Define(string name, IBuildInFunction func)
         {
             BaseInFunctions[name] = func;
-            return new BuiltInFunctionValue(name);
+            return new BuildInFunctionValue(name);
         }
     }
 }

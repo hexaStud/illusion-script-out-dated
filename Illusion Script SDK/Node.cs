@@ -78,15 +78,15 @@ namespace IllusionScript.SDK
                 case "NullNode":
                     return new NullNode(Position.Empty(), Position.Empty()).__unbundle__(json);
                 case "NumberNode":
-                    return new NumberNode(Token.Empty());
+                    return new NumberNode(Token.Empty()).__unbundle__(json);
                 case "ObjectAccessNode":
                     return new ObjectAccessNode(new List<Token>() { Token.Empty() }).__unbundle__(json);
                 case "ObjectAssignNode":
                     return new ObjectAssignNode(new List<Token>() { Token.Empty() }, Empty()).__unbundle__(json);
                 case "ObjectCallNode":
-                    return new ObjectCallNode(Empty(), new List<Node>() { Empty() });
+                    return new ObjectCallNode(Empty(), new List<Node>() { Empty() }).__unbundle__(json);
                 case "ObjectNode":
-                    return new ObjectNode(new Dictionary<Token, Node>(), Position.Empty(), Position.Empty());
+                    return new ObjectNode(new Dictionary<Token, Node>(), Position.Empty(), Position.Empty()).__unbundle__(json);
                 case "ReturnNode":
                     return new ReturnNode(Empty(), Position.Empty(), Position.Empty()).__unbundle__(json);
                 case "StringNode":

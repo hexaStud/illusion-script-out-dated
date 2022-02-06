@@ -15,7 +15,7 @@ namespace IllusionScript.Lib.std
             "x"
         };
 
-        public RuntimeResult Exec(Context context, BuiltInFunctionValue self)
+        public RuntimeResult Exec(Context context, BuildInFunctionValue self)
         {
             Value value = context.SymbolTable.Get("x").Value;
             if (value.GetType() == typeof(StringValue))
